@@ -21,8 +21,7 @@ export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
   return (
     <>
     <div className="sticky top-[calc(1.2rem+var(--banner-height))] sm:top-[calc(1.3rem+var(--banner-height))] md:top-[calc(1.7rem+var(--banner-height))] lg:top-[calc(2rem+var(--banner-height))] xl:top-[calc(2.3rem+var(--banner-height))] left-0 w-full bg-white shadow z-20" style={{ ["--banner-height" as any]: `${bannerHeight}px` }}>
-      <div className="mx-auto flex items-center justify-between px-2 sm:px-6 md:px-6 lg:px-6 h-10 sm:h-12 md:h-14 lg:h-16">
-        
+      <div className="mx-auto flex items-center px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 max-w-8xl h-10 sm:h-12 md:h-14 lg:h-16">        
         {/* LOGO */}
         <div className="flex items-center">
           <img 
@@ -32,15 +31,21 @@ export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
           />
         </div>
 
-        {/* MENU (muncul mulai lg) */}
-        <nav className="hidden md:flex items-center gap-2 sm:gap-2 md:gap-18 lg:gap-35 xl:gap-40 text-gray-700 text-sm xl:text-base">
-          <MenuItem label={t.cariDokter} disabled={isCariDokter} onClick={() => {if (isCariDokter) return; startLoading(); router.push("/cari-dokter"); }} />
-          <MenuItem label={t.layananKesehatan} dropdown/>
-          <MenuItem label={t.pusatInformasi} />
-        </nav>
+        {/* KANAN (MENU + SEARCH) */}
+        <div className="flex items-center ml-auto gap-8">
 
-        {/* SEARCH + HAMBURGER */}
-        <div className="flex items-center gap-8">
+          {/* MENU */}
+          <nav className="hidden md:flex items-center gap-14 text-gray-700 text-sm xl:text-base">
+            <MenuItem label={t.cariDokter} disabled={isCariDokter} onClick={() => {
+              if (isCariDokter) return;
+              startLoading();
+              router.push("/cari-dokter");
+            }} />
+            <MenuItem label={t.layananKesehatan} dropdown />
+            <MenuItem label={t.pusatInformasi} />
+          </nav>
+
+          <div className="flex items-center gap-4">
 
           {/* SEARCH BOX — hilang ≤ sm */}
           <div className="hidden md:flex bg-gray-100 px-4 py-2 rounded-full items-center gap-2 cursor-pointer">
@@ -61,6 +66,7 @@ export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
           </button>
 
           </div>
+        </div>
 
       </div>
     </div>

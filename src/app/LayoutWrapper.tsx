@@ -95,7 +95,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
         {isLoadingGlobal && <div className="fixed inset-0 bg-white z-9999"></div>}
 
         <header className="shadow-md fixed w-full bg-[#21368B] text-white z-50">
-          <div className="w-full flex items-center justify-between py-1 px-8">
+          <div className="mx-auto w-full flex items-center justify-between py-1 px-6 sm:px-8 md:px-12 lg:px-16 xl:px-18 max-w-8xl">
           {/* KIRI (Menu Navigasi) */}
             <div className="hidden md:flex items-center gap-4 lg:gap-8">
               <BerandaComponents />

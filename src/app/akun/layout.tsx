@@ -66,7 +66,7 @@ export default function AkunLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen pt-7">
-      <div className="w-full mx-auto flex flex-col md:flex-row gap-5 p-7">
+      <div className="w-full mx-auto px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 max-w-8xl py-7 flex flex-col md:flex-row gap-5">
 
        {/* ================= MOBILE DROPDOWN (react-select) ================= */}
         <div className="md:hidden mb-6">

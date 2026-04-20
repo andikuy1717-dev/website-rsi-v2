@@ -53,7 +53,10 @@ export default function TentangKamiLayout({
   tabOptions.find(opt => opt.value === pathname) || null;
 
   return (
-    <div className="min-h-screen px-4 md:px-6 py-8 md:py-12">
+    <div className="min-h-screen py-8 md:py-12">
+
+      {/* 🔥 CONTAINER BIAR SEJAJAR */}
+      <div className="mx-auto w-full max-w-8xl px-4 md:px-14 lg:px-16 xl:px-18">
 
      {/* ================= MOBILE DROPDOWN (react-select) ================= */}
       <div className="md:hidden mb-8">
@@ -102,7 +105,7 @@ export default function TentangKamiLayout({
 
       {/* ================= DESKTOP TABS ================= */}
       <div className="hidden md:flex justify-center border-b mb-12">
-        <div className="flex md: gap-8 lg:gap-17 xl:gap-27 bg-gray-100 px-10 py-1 rounded-full shadow-sm">
+        <div className="flex md: gap-16 lg:gap-24 xl:gap-23 bg-gray-100 px-10 py-1 rounded-full shadow-sm">
           {tabs.map((tab) => {
             const isActive = pathname === tab.href;
 
@@ -132,6 +135,7 @@ export default function TentangKamiLayout({
       </div>
 
       {children}
+      </div>
     </div>
   );
 }

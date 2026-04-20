@@ -10,7 +10,7 @@ const services = [
   },
   {
     title: "Slimming Clinic",
-    desc: "Dari konsultasi hingga perawatan lanjutan, kami membantu Anda mendapatkan tubuh yang Anda impikan dengan metode yang aman dan efektif serta sejahterani",
+    desc: "Dari konsultasi hingga perawatan lanjutan, kami membantu Anda mendapatkan tubuh yang Anda impikan dengan metode yang aman.",
     img: "/slimming.webp",
   },
   {
@@ -22,7 +22,7 @@ const services = [
 
 export default function LayananUnggulanSectionPage() {
   return (
-    <section className="w-full bg-gray-100 py-20 px-6">
+    <section className="w-full bg-gray-100 py-20 px-18">
       <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-12 items-center">
 
         {/* TEXT */}

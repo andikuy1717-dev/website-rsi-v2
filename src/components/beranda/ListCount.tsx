@@ -45,7 +45,7 @@ export default function ListCount() {
 
   return (
     <div className="w-full bg-[#F8FBFF]">
-      <div className="flex flex-row items-center justify-between gap-10 md:gap-20 px-4 sm:px-10 md:px-25 lg:px-45 xl:px-45">
+      <div className="flex flex-row items-center justify-between gap-10 md:gap-20 px-4 sm:px-8 md:px-12 lg:px-16 xl:px-18">
 
         {/* ITEM */}
         <div className="flex flex-col items-center text-center">

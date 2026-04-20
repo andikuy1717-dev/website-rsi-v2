@@ -32,9 +32,7 @@ export default function HeroSection() {
               <button className="px-4 py-2 border border-blue-600 text-blue-600 text-[10px] sm:text-[12px] md:text-[10px] lg:text-[12px] xl:text-[14px] font-semibold rounded-full hover:bg-blue-50">
                 {t.dokter}
               </button>
-              <button className="px-4 py-2 border border-blue-600 text-blue-600 text-[10px] sm:text-[12px] md:text-[10px] lg:text-[12px] xl:text-[14px] font-semibold rounded-full hover:bg-blue-50">
-                {t.lokasi}
-              </button>
+
             </div>
 
             {/* INPUT SEARCH */}
@@ -47,13 +45,15 @@ export default function HeroSection() {
         </div>
 
         {/* RIGHT IMAGE */}
-        <div className="flex">
-          <img
-            src="/dokteran.jfif"
-            alt="Hero"
-            className="w-[750px] h-[250px] md:w-[330px] md:h-[248px] lg:w-[480px] lg:h-[280px] xl:w-[660px] xl:h-[315px]"
-          />
-        </div>
+        {/* 
+          <div className="flex">
+            <img
+              src="/dokteran.jfif"
+              alt="Hero"
+              className="w-[750px] h-[250px] md:w-[330px] md:h-[248px] lg:w-[480px] lg:h-[280px] xl:w-[660px] xl:h-[315px]"
+            />
+          </div>
+        */}
       </div>
   );
 }

@@ -6,7 +6,7 @@ import LayananUnggulanSectionPage from "@/components/beranda/LayananUnggulanSect
 export default function Page() {
   return (
     <>
-    <div className="w-full pt-5 sm:pt-5 md:pt-15 flex flex-col items-start justify-start gap-4 sm:gap-6 md:px-6 lg:px-6 xl:px-6" style={{
+    <div className="w-full pt-5 sm:pt-5 md:pt-15 flex flex-col items-start justify-start gap-4 sm:gap-6 sm:px-8 md:px-12 lg:px-16 xl:px-18" style={{
       background: "linear-gradient(to bottom right, white 20%, #a6cbff 70%, #a6cbff 50%, #bbd8fd 90%)"
     }}>
       

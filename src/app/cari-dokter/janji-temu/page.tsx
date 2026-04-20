@@ -753,7 +753,7 @@ export default function JanjiTemuPage() {
   };
 
   return (
-    <div className="w-full mx-auto px-4 md:px-8 py-12">
+    <div className="w-full mx-auto px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 max-w-8xl py-12">
 
       {/* ================= PAGE TITLE ================= */}
       <div className="mb-6">
