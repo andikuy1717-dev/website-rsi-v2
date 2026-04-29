@@ -19,7 +19,7 @@ export default function SejarahPage() {
   const section2022 = useFadeInOnScroll();
 
   return (
-    <div className="min-h-screen px-6 text-black">
+    <div className="min-h-screen mx-auto w-full max-w-8xl px-4 md:px-14 lg:px-16 xl:px-18 text-black">
 
       {/* ================= SECTION 1910 ================= */}
       <div ref={section1910.ref} className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16 transition-all duration-700 ease-out ${section1910.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>

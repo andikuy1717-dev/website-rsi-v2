@@ -288,3 +288,23 @@ body {
   font-weight: 600;
 }
 
+@keyframes fadeUpSmooth {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUpSmooth 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* delay biar bertahap */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }

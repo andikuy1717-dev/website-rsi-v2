@@ -1,7 +1,10 @@
 import HeroSection from "@/components/beranda/HeroSection";
 import SixMainButtons from "@/components/beranda/SixMainButtons";
 import ListCount from "@/components/beranda/ListCount";
-import LayananUnggulanSectionPage from "@/components/beranda/LayananUnggulanSectionPage"
+import LayananUnggulanSectionPage from "@/components/beranda/LayananUnggulanSectionPage";
+import RuanganDanKamar from "@/components/beranda/RuanganDanKamar";
+import CeritaPasienPage from "@/components/beranda/CeritaPasien";
+import SudahBuatJanjiTemuPage from "@/components/beranda/SudahBuatJanjiTemuPage";
 
 export default function Page() {
   return (
@@ -20,8 +23,18 @@ export default function Page() {
       {/* PARAMEDIC COUNT LIST */}
       <ListCount/>
 
-      {/* PARAMEDIC COUNT LIST */}
+      {/* LAYANAN UNGGULAN PAGE */}
       <LayananUnggulanSectionPage/>
+
+      {/* RUANGAN DAN KAMAR */}
+      <RuanganDanKamar/>
+
+      {/* CERITA PASIEN */}
+      <CeritaPasienPage/>
+
+      {/* SUDAH BUAT JANJI TEMU */}
+      <SudahBuatJanjiTemuPage/>
+
     </>
 
   );

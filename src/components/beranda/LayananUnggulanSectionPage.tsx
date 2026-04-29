@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { useLang } from "@/context/LanguageContext";
+import { ID } from "@/lang/id";
+import { EN } from "@/lang/en";
 
 const services = [
   {
@@ -20,22 +23,26 @@ const services = [
   },
 ];
 
+
+
 export default function LayananUnggulanSectionPage() {
+  const { lang } = useLang();
+  const t = lang === "EN" ? EN : ID;
+
   return (
-    <section className="w-full bg-gray-100 py-20 px-18">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-12 items-center">
+    <section className="w-full bg-gray-100 py-20">
+      <div className="px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 max-w-8xl mx-auto">
+        <div className="grid lg:grid-cols-3 gap-12 items-start">
 
         {/* TEXT */}
         <div>
-          <h2 className="text-4xl font-light text-blue-900 leading-snug">
-            Layanan <br />
-            <span className="font-bold">Unggulan Kami</span>
+          <h2 className="mt-22 text-4xl font-light text-blue-900 leading-snug">
+            {t.layanan} <br />
+            <span className="font-bold">{t.unggulanKami}</span>
           </h2>
 
-          <p className="mt-6 text-gray-600 leading-relaxed">
-            Kami menghadirkan berbagai layanan kesehatan terbaik dengan
-            fasilitas modern dan tenaga medis profesional untuk memberikan
-            perawatan yang optimal dan menyeluruh bagi setiap pasien.
+          <p className="mt-2 text-gray-600 leading-relaxed text-xl">
+            {t.kamiMenghadirkan}
           </p>
         </div>
 
@@ -74,6 +81,7 @@ export default function LayananUnggulanSectionPage() {
 
         </div>
       </div>
+    </div>
     </section>
   );
 }

@@ -258,6 +258,9 @@ export const EN = {
   masukanKataSandiLama: "Enter Old Password",
   masukanKataSandiBaru: "Enter New Password",
   masukanKonfirmasiSandiBaru: "Confirm New Password",
+  layanan:"Our",
+  unggulanKami: "Superior Service",
+  kamiMenghadirkan:"We offer a variety of top-notch healthcare services with modern facilities and professional medical staff to provide optimal and comprehensive care for every patient.",
   kataPengantarText: `
   <p>
     Welcome to the <strong>Immanuel Hospital (RSI)</strong> website in Bandung.

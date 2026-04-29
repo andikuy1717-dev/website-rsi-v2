@@ -38,7 +38,7 @@ export default function TentangKamiLayout({
   const tabs = [
     { label: t.sejarah, href: "/tentang-kami/sejarah" },
     { label: t.kataPengantar, href: "/tentang-kami/kata-pengantar" },
-    { label: t.rekananAsuransi, href: "/tentang-kami/rekanan-asuransi"},
+    //{ label: t.rekananAsuransi, href: "/tentang-kami/rekanan-asuransi"},
     { label: t.visi_misi, href: "/tentang-kami/visi-misi" },
     { label: t.penghargaan, href: "/tentang-kami/penghargaan" },
     { label: t.filosofi_logo, href: "/tentang-kami/filosofi-logo" },
@@ -105,7 +105,7 @@ export default function TentangKamiLayout({
 
       {/* ================= DESKTOP TABS ================= */}
       <div className="hidden md:flex justify-center border-b mb-12">
-        <div className="flex md: gap-16 lg:gap-24 xl:gap-23 bg-gray-100 px-10 py-1 rounded-full shadow-sm">
+        <div className="flex gap-6 lg:gap-20 bg-gray-100 px-6 py-2 rounded-full shadow-sm">
           {tabs.map((tab) => {
             const isActive = pathname === tab.href;
 

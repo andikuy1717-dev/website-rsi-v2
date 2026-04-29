@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}"
@@ -13,7 +13,7 @@ module.exports = {
       fontFamily: {
         sans: ['var(--font-geist-sans)'],
         mono: ['var(--font-geist-mono)'],
-        inter: ['Inter', 'sans-serif'],  // <--- Tambahkan ini
+        inter: ['Inter', 'sans-serif'],
       },
       aspectRatio: {
         '1350/450': '1350 / 450',

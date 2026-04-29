@@ -10,16 +10,17 @@
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.8",
+    "axios": "^1.15.1",
     "cookie": "^1.1.1",
     "date-fns": "^4.1.0",
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.561.0",
-    "next": "16.0.3",
+    "next": "^16.0.3",
     "nprogress": "^0.2.0",
-    "react": "19.2.0",
+    "react": "^19.2.0",
     "react-datepicker": "^9.1.0",
-    "react-dom": "19.2.0",
+    "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",
     "react-leaflet": "^5.0.0",
     "react-select": "^5.10.2",
@@ -29,15 +30,31 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.21",
-    "@types/node": "^20",
+    "@types/node": "^20.19.39",
     "@types/nprogress": "^0.2.3",
-    "@types/react": "^19",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19",
     "@types/xml2js": "^0.4.14",
+    "autoprefixer": "^10.5.0",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  }
+    "postcss": "^8.5.10",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3"
+  },
+  "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
+  "main": "tailwind.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dikuy123-dev/website-rsi-v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Dikuy123-dev/website-rsi-v2/issues"
+  },
+  "homepage": "https://github.com/Dikuy123-dev/website-rsi-v2#readme"
 }

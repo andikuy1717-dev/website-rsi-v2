@@ -2,7 +2,7 @@
 
 import { FiChevronDown, FiSearch, FiMenu } from "react-icons/fi";
 import HamburgerMenu from "./HamburgerMenu";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ID } from "@/lang/id";
 import { EN } from "@/lang/en";
 import { useLang } from "@/context/LanguageContext";
@@ -42,7 +42,49 @@ export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
               router.push("/cari-dokter");
             }} />
             <MenuItem label={t.layananKesehatan} dropdown />
-            <MenuItem label={t.pusatInformasi} />
+
+            <MenuItem label={t.pusatInformasi} dropdown>
+              <div className="flex flex-col text-sm md:text-[10px] lg:text-[12px] xl:text-[14px]">
+              {[
+                "Komite Etik Penelitian Kesehatan (KEPK)",
+                "Clinical Research Unit (CRU)",
+                "Komite Koordinasi Pendidikan (Komkordik)",
+                "Diklat RS Immanuel",
+                "Edukasi Kesehatan",
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className="
+                    relative px-5 py-3 cursor-pointer
+                    text-gray-700
+                    transition-colors duration-300
+                    hover:text-blue-600
+                    hover:bg-blue-50
+
+                    after:content-['']
+                    after:absolute
+                    after:left-0
+                    after:bottom-0
+                    after:h-[2px]
+                    after:w-full
+                    after:bg-blue-800
+                    after:scale-x-0
+                    after:origin-left
+                    after:transition-transform
+                    after:duration-300
+
+                    hover:after:scale-x-100
+                  "
+                  onClick={() => {
+                    startLoading();
+                    console.log("klik:", item);
+                  }}
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          </MenuItem>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -77,11 +119,61 @@ export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
   );
 }
 
-function MenuItem({ label, dropdown = false,  onClick, disabled = false, }: { label: string; dropdown?: boolean; onClick?: () => void;  disabled?: boolean; }) {
+function MenuItem({
+  label,
+  dropdown = false,
+  onClick,
+  disabled = false,
+  children,
+}: {
+  label: string;
+  dropdown?: boolean;
+  onClick?: () => void;
+  disabled?: boolean;
+  children?: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const [hasEnteredDropdown, setHasEnteredDropdown] = useState(false);
+
   return (
-    <div onClick={!disabled ? onClick : undefined } className={`flex items-center gap-1 transition text-[8px] sm:text-[11px] md:text-[14px] lg:text-[16px] xl:text-[18px]  ${ disabled ? "cursor-default text-blue-500" : "cursor-pointer hover:text-blue-500 text-gray-700" }`}>
-      <span>{label}</span>
-      {dropdown && <FiChevronDown className="text-blue-500" size={16} />}
+    <div className="relative">
+      {/* BUTTON */}
+      <div
+        onClick={() => {
+          if (disabled) return;
+
+          if (dropdown) {
+            setOpen(true);
+            setHasEnteredDropdown(false); // reset tiap buka
+          } else {
+            onClick?.();
+          }
+        }}
+        className={`
+          flex items-center gap-1 transition outline-none
+          ${disabled
+            ? "cursor-default text-blue-500"
+            : "cursor-pointer hover:text-blue-500 text-gray-700"}
+        `}
+      >
+        <span>{label}</span>
+        {dropdown && <FiChevronDown className="text-blue-500" size={16} />}
+      </div>
+
+      {/* DROPDOWN */}
+      {dropdown && open && (
+        <div
+          className="absolute top-full md:mt-4 lg:mt-5 xl:mt-5 left-1/2 -translate-x-1/2 bg-white shadow-lg rounded-lg border border-gray-300 w-64 z-50 overflow-hidden"
+          onMouseEnter={() => setHasEnteredDropdown(true)} // ✅ cursor masuk list
+          onMouseLeave={() => {
+            if (hasEnteredDropdown) {
+              setOpen(false); // ✅ baru boleh close
+            }
+          }}
+        >
+          {children}
+        </div>
+      )}
     </div>
   );
 }

@@ -870,7 +870,7 @@ export default function JanjiTemuPage() {
               </div>
 
              {/* ================= GRID 2 KOLON: Peserta + DatePicker ================= */}
-              <div className="grid grid-cols-1 md:grid-cols-2 md:gap-20 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
                 {/* LEFT: DROPBOX PESERTA */}
                 <div className="mb-4">

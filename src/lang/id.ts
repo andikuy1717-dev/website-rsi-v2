@@ -259,6 +259,9 @@ export const ID = {
   masukanKataSandiLama: "Masukan Kata Sandi Lama",
   masukanKataSandiBaru: "Masukan Kata Sandi Baru",
   masukanKonfirmasiSandiBaru: "Masukan Konfirmasi Kata Sandi Baru",
+  layanan:"Layanan",
+  unggulanKami: "Unggulan Kami",
+  kamiMenghadirkan: "Kami menghadirkan berbagai layanan kesehatan terbaik dengan fasilitas modern dan tenaga medis profesional untuk memberikan perawatan yang optimal dan menyeluruh bagi setiap pasien.",
   kataPengantarText: `
         <p>
             Selamat datang di <strong>Website Rumah Sakit Immanuel (RSI)</strong> kota Bandung. 
