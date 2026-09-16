@@ -1,9 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useFadeInOnScroll } from "@/hooks/useFadeInOnScroll";
 import { useLang } from "@/context/LanguageContext";
 import { ID } from "@/lang/id";
 import { EN } from "@/lang/en";
+import {
+  getVisionMission,
+  VisionMissionItem,
+} from "@/services/VisionMissionService";
 
 export default function VisiMisiPage() {
   const visi = useFadeInOnScroll();
@@ -12,84 +17,130 @@ export default function VisiMisiPage() {
   const { lang } = useLang();
   const t = lang === "ID" ? ID : EN;
 
-  const misiList = t.misi.list;
+  const [vision, setVision] = useState<VisionMissionItem[]>([]);
+  const [missions, setMissions] = useState<VisionMissionItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchVisionMission = async () => {
+      try {
+        setLoading(true);
+
+        const result = await getVisionMission();
+
+        if (result.success && result.data) {
+          const sortedVision = [...(result.data.vision || [])].sort(
+            (a, b) => a.order - b.order
+          );
+
+          const sortedMissions = [...(result.data.missions || [])].sort(
+            (a, b) => a.order - b.order
+          );
+
+          setVision(sortedVision);
+          setMissions(sortedMissions);
+        } else {
+          setVision([]);
+          setMissions([]);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data visi dan misi:", error);
+        setVision([]);
+        setMissions([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVisionMission();
+  }, []);
 
   return (
-    <section className="min-h-screen px-6 md:px-20 py-1">
-      
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 relative">
-
-        {/* BORDER TENGAH (desktop only) */}
-        <div className="hidden md:block absolute left-1/2 top-0 h-full w-px bg-slate-400" />
-
-        {/* ================= VISI ================= */}
-        <div
-            ref={visi.ref}
-            className={`transition-all duration-700 ease-out text-center
-                ${visi.isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-16"
-                }
-            `}
-            >
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-800 mb-6">
-                {t.visi.title}
-            </h2>
-
-            <div className="w-16 h-1 bg-blue-600 mx-auto mb-10 rounded-full" />
-
-            <h3 className="text-2xl md:text-3xl font-semibold leading-snug text-slate-800 mb-6">
-                {t.visi.headline}
-                <br />
-                <span className="text-blue-600">{t.visi.highlight}</span>
-            </h3>
-
-            <p className="text-slate-600">
-                {t.visi.description.before}
-            <span className="font-semibold text-slate-800">
-                {t.visi.description.bold}
-            </span>
-                {t.visi.description.after}
-            </p>
-            
+    <section className="min-h-screen px-6 py-1 md:px-20">
+      {loading && (
+        <div className="flex justify-center py-20">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-[#21368B]" />
         </div>
+      )}
 
+      {!loading && (
+        <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-16 md:grid-cols-2">
+          {/* BORDER TENGAH — DESKTOP */}
+          <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-slate-400 md:block" />
 
-        {/* ================= MISI ================= */}
-        <div
-            ref={misi.ref}
-            className={`transition-all duration-700 ease-out delay-150 text-center md:text-left
-                ${misi.isVisible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-16"
-                }
-            `}
-            >
-            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-800 mb-6 text-center">
-                {t.misi.title}
+          {/* VISI */}
+          <div
+            ref={visi.ref}
+            className={`text-center transition-all duration-700 ease-out ${
+            visi.isVisible || !loading
+                ? "translate-x-0 opacity-100"
+                : "-translate-x-16 opacity-0"
+            }`}
+          >
+            <h2 className="mb-6 text-4xl font-extrabold text-slate-800 md:text-5xl">
+              {t.visi.title}
             </h2>
 
-            <div className="w-16 h-1 bg-blue-600 mx-auto mb-10 rounded-full" />
+            <div className="mx-auto mb-10 h-1 w-16 rounded-full bg-blue-600" />
 
-            <div className="space-y-6">
-                {misiList.map((item, index) => (
-                <div
-                    key={index}
-                    className="flex gap-4 items-start p-6 rounded-xl border border-slate-300 bg-white hover:shadow-md transition text-left"
-                >
-                    <div className="w-9 h-9 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 font-bold shrink-0">
-                    {index + 1}
+            {vision.length > 0 ? (
+              <div className="space-y-5">
+                {vision.map((item) => (
+                  <div
+                    key={item.id}
+                    className="rounded-2xl border border-slate-300 bg-white p-7 shadow-sm"
+                  >
+                    <p className="text-lg leading-relaxed text-slate-700 md:text-xl">
+                      {item.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-slate-500">Belum ada data visi.</p>
+            )}
+          </div>
+
+          {/* MISI */}
+          <div
+            ref={misi.ref}
+            className={`text-center transition-all delay-150 duration-700 ease-out md:text-left ${
+            misi.isVisible || !loading
+                ? "translate-x-0 opacity-100"
+                : "translate-x-16 opacity-0"
+            }`}
+          >
+            <h2 className="mb-6 text-center text-4xl font-extrabold text-slate-800 md:text-5xl">
+              {t.misi.title}
+            </h2>
+
+            <div className="mx-auto mb-10 h-1 w-16 rounded-full bg-blue-600" />
+
+            {missions.length > 0 ? (
+              <div className="space-y-6">
+                {missions.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className="flex items-start gap-4 rounded-xl border border-slate-300 bg-white p-6 text-left transition hover:shadow-md"
+                  >
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50 font-bold text-blue-600">
+                      {index + 1}
                     </div>
 
-                    <p className="text-slate-600 leading-relaxed">
-                    {item}
+                    <p className="leading-relaxed text-slate-600">
+                      {item.content}
                     </p>
-                </div>
+                  </div>
                 ))}
-            </div>
+              </div>
+            ) : (
+              <p className="text-center text-slate-500 md:text-left">
+                Belum ada data misi.
+              </p>
+            )}
+          </div>
         </div>
-
-      </div>
+      )}
     </section>
   );
 }

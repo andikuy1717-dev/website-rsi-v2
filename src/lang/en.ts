@@ -1,7 +1,7 @@
 export const EN = {
   beranda: "Home",
   tentangKami: "About Us",
-  infoSehat: "Health Info",
+  infoSehat: "Health Education",
   hubungiKami: "Contact Us",
   masukDaftar: "Login/Register",
   cariDokter: "Find a Doctor",

@@ -2,8 +2,7 @@
 
 import Swal from "sweetalert2";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, forwardRef } from "react";
-import Image from "next/image";
+import { forwardRef, Suspense, useEffect, useState } from "react";import Image from "next/image";
 import { fetchParamedicServiceUnit } from "@/services/ParamedicServiceUnitService";
 import { fetchParamedicSchedule, ParamedicSchedule } from "@/services/ParamedicSchedule";
 import { fetchServiceUnitNonBPJSMixed } from "@/services/ServiceUnitNonBPJSMixedService";
@@ -33,7 +32,7 @@ type DoctorDetail = {
   foto_base64?: string;
 };
 
-export default function JanjiTemuPage() {
+function JanjiTemuContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dateParam = searchParams?.get("date");
@@ -661,8 +660,8 @@ export default function JanjiTemuPage() {
               <hr style="margin:16px 0;border-top:1px dashed #ccc;" />
               <p style="font-size:14px;color:#555;">
                 ${lang === "ID"
-                  ? "Silahkan tunjukan bukti appointment kepada petugas di loket pendaftaran."
-                  : "Please show this appointment proof to the registration counter staff."}
+                  ? "Silahkan Lakukan Check In pada Aplikasi IMMA Mobile Apps atau Hubungi Petugas."
+                  : "Please check in via the IMMA mobile app or contact a staff member."}
               </p>
             </div>
           `,
@@ -1056,6 +1055,22 @@ export default function JanjiTemuPage() {
         })}
       />
     </div>
+  );
+}
+
+function LoadingJanjiTemu() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-[#21368B]" />
+    </div>
+  );
+}
+
+export default function JanjiTemuPage() {
+  return (
+    <Suspense fallback={<LoadingJanjiTemu />}>
+      <JanjiTemuContent />
+    </Suspense>
   );
 }
 

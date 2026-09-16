@@ -1,5 +1,6 @@
 "use client";
 
+import Swal from "sweetalert2";
 import React, { useState } from "react";
 import { ArrowRight, X } from "lucide-react";
 
@@ -49,7 +50,15 @@ export default function CeritaPasienPage() {
                  />
             </button>
 
-            <button className="flex items-center gap-2 text-white font-bold">
+            <button onClick={() => {
+                  Swal.fire({
+                    icon: "info",
+                    text: "Menu ini dalam tahap pengembangan",
+                    confirmButtonText: "Mengerti",
+                    confirmButtonColor: "#21368B",
+                  });
+                }}
+                className="flex items-center gap-2 text-white font-bold">
                 <span className="font-bold cursor-pointer">Cerita Lainnya</span>
                  <ArrowRight
                     size={22}
@@ -67,7 +76,7 @@ export default function CeritaPasienPage() {
 
     {/* 🔥 MODAL */}
       {open && (
-        <div className="fixed inset-0 bg-black/80 z-[9999] flex items-center justify-center px-4">
+        <div className="fixed inset-0 bg-black/80 z-9999 flex items-center justify-center px-4">
 
             <div className="bg-white w-full max-w-7xl h-[80vh] rounded-2xl overflow-hidden relative shadow-2xl">
 

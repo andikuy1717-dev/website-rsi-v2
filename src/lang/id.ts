@@ -3,7 +3,7 @@ import { Bookmark } from "lucide-react";
 export const ID = {
   beranda: "Beranda",
   tentangKami: "Tentang Kami",
-  infoSehat: "Info Sehat",
+  infoSehat: "Edukasi Kesehatan",
   hubungiKami: "Hubungi Kami",
   masukDaftar: "Masuk/Daftar",
   cariDokter: "Cari Dokter",

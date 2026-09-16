@@ -7,12 +7,22 @@ import { ID } from "@/lang/id";
 import { EN } from "@/lang/en";
 import { useLang } from "@/context/LanguageContext";
 import LoginModalController from "@/app/modal-punya-rekammedis/LoginModalController";
+import Swal from "sweetalert2";
 
 export default function LoginPage() {
   const router = useRouter();
   const { lang } = useLang();
   const t = lang === "ID" ? ID : EN;
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const showDevelopmentAlert = () => {
+    Swal.fire({
+      icon: "info",
+      text: "Menu ini sedang dalam tahap pengembangan",
+      confirmButtonText: "Mengerti",
+      confirmButtonColor: "#21368B",
+    });
+  };
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-3">
@@ -84,7 +94,7 @@ export default function LoginPage() {
 
             {/* BELUM PUNYA */}
             <button
-              onClick={() => router.push("/daftar")}
+              onClick={showDevelopmentAlert}
               className="flex flex-col items-center justify-center border rounded-xl p-4 hover:bg-blue-50 hover:border-blue-600 transition cursor-pointer"
             >
               <img
@@ -103,7 +113,7 @@ export default function LoginPage() {
           <p className="text-xs lg:text-[12px] xl:text-[14px] text-center text-gray-600">
             {t.belumPunyaAkun}{" "}
             <button
-              onClick={() => router.push("/register")}
+              onClick={showDevelopmentAlert}
               className="text-blue-800 font-semibold hover:underline"
             >
               {t.daftarSekarang}

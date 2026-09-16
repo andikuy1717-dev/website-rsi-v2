@@ -5,6 +5,7 @@ import { ID } from "@/lang/id";
 import { EN } from "@/lang/en";
 import { useRouter, usePathname } from "next/navigation";
 import { startLoading } from "@/utils/LoadingManager";
+import Swal from "sweetalert2";
 
 export default function SixMainButtons() {
   const { lang } = useLang();
@@ -12,6 +13,15 @@ export default function SixMainButtons() {
   const router = useRouter();
   const pathname = usePathname();
   const isCariDokter = pathname === "/cari-dokter";
+
+  const showDevelopmentAlert = () => {
+    Swal.fire({
+      icon: "info",
+      text: "Menu ini sedang dalam tahap pengembangan",
+      confirmButtonText: "Mengerti",
+      confirmButtonColor: "#21368B",
+    });
+  };
 
   return (
     <div className="mt-8 w-full">
@@ -48,7 +58,7 @@ export default function SixMainButtons() {
           <span className="text-blue-700 px-1 lg:text-lg xl:text-xl">›</span>
         </button>
 
-        <button className="flex-1 items-center gap-3 bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.50)] py-3 rounded-2xl border border-gray-200 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
+        <button onClick={showDevelopmentAlert} className="flex-1 items-center gap-3 bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.50)] py-3 rounded-2xl border border-gray-200 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
           <div className="flex justify-center items-center w-full">
             <img src="/layanan_unggul2.png" className="w-7 h-7" />
           </div>
@@ -56,7 +66,7 @@ export default function SixMainButtons() {
           <span className="text-blue-700 px-1 lg:text-lg xl:text-xl">›</span>
         </button>
 
-        <button className="flex-1 items-center gap-3 bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.50)] py-3 rounded-2xl border border-gray-200 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
+        <button   onClick={showDevelopmentAlert} className="flex-1 items-center gap-3 bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.50)] py-3 rounded-2xl border border-gray-200 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
           <div className="flex justify-center items-center w-full">
             <img src="/medical_check_up2.png" className="w-7 h-7" />
           </div>
@@ -66,6 +76,13 @@ export default function SixMainButtons() {
 
         <button 
           onClick={() => {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+              router.push("/login");
+              return;
+            }
+
             router.push("/akun/hasil-lab");
           }} 
           className="flex-1 items-center gap-3 bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.50)] py-3 rounded-2xl border border-gray-200 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
@@ -76,7 +93,7 @@ export default function SixMainButtons() {
           <span className="text-blue-700 px-1 lg:text-lg xl:text-xl">›</span>
         </button>
 
-        <button className="flex-1 items-center gap-3 bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.50)] py-3 rounded-2xl border border-gray-200 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
+        <button onClick={showDevelopmentAlert} className="flex-1 items-center gap-3 bg-white shadow-[0_25px_50px_-12px_rgba(0,0,0,0.50)] py-3 rounded-2xl border border-gray-200 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
           <div className="flex justify-center items-center w-full">
             <img src="/radiologi2.png" className="w-7 h-7" />
           </div>

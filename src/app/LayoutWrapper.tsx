@@ -8,9 +8,8 @@ import AkunLoginUserComponents from "@/components/AkunLoginUserComponents";
 import LinePutih from "@/components/LinePutih";
 import BerandaComponents from "@/components/BerandaComponents";
 import TentangKamiComponents from "@/components/TentangKamiComponents";
-import InfoSehatComponents from "@/components/InfoSehatComponents";
+import EdukasiKesehatanComponents from "@/components/EdukasiKesehatanComponents";
 import TopProgressBar from "@/components/TopProgressBar";
-import PosterComponents from "@/components/PosterComponents";
 import TopMenu from "@/components/opsi_menu/TopMenu";
 import PreFooter from "@/components/Prefooter";
 import Footer from "@/components/Footer";
@@ -18,6 +17,7 @@ import { useLang } from "@/context/LanguageContext";
 import { useGlobalLoading } from "@/utils/UseGlobalLoading";
 import { startLoading, endLoading } from "@/utils/LoadingManager";
 import { usePathname } from "next/navigation";
+import BannerPopup from "@/components/BannerPopUp";
 
 const CLOSE_KEY = "poster_closed_at";
 const SHOW_DELAY = 30 * 60 * 1000;
@@ -90,6 +90,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
 
         {/* 🔥 TOP LOADING BAR */}
         <TopProgressBar />
+        <BannerPopup />
 
         {/* FULL WHITE LOADING */}
         {isLoadingGlobal && <div className="fixed inset-0 bg-white z-9999"></div>}
@@ -100,7 +101,7 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
             <div className="hidden md:flex items-center gap-4 lg:gap-8">
               <BerandaComponents />
               <TentangKamiComponents />
-              <InfoSehatComponents />
+              <EdukasiKesehatanComponents />
             </div>
 
         {/* KANAN */}
@@ -131,7 +132,6 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
         </div>
         </header>
 
-        <PosterComponents show={showPoster} setShow={setShowPoster} setBannerHeight={setBannerHeight}/>
         <TopMenu bannerHeight={showPoster ? bannerHeight : 0}/>
 
         <main>{children}</main>

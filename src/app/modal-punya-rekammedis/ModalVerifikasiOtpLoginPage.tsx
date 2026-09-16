@@ -91,12 +91,20 @@ export default function ModalVerifikasiOtpLoginPage({ email, onClose }: { email:
         const firstName = medicalNo ? await getPatientFirstName(medicalNo) : "User";
 
         if (token) {
+          const userId = Number(result.data?.user?.id);
+
+          if (!Number.isFinite(userId)) {
+            console.error("ID user tidak ditemukan dari response login:", result.data);
+            return;
+          }
+
           login({
+            id: userId,
             token,
-            firstName: firstName ?? "User",
+            firstName: String(firstName ?? "User"),
             medicalNo: result.data?.user?.medicalNo,
             email: result.data?.user?.email,
-            noKK: result.data?.user?.noKK
+            noKK: result.data?.user?.noKK,
           });
         }
 

@@ -308,3 +308,33 @@ body {
 .delay-200 { animation-delay: 0.2s; }
 .delay-300 { animation-delay: 0.3s; }
 .delay-400 { animation-delay: 0.4s; }
+
+/* BACKDROP */
+@keyframes bannerBackdropFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* POPUP */
+@keyframes bannerPopupFade {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.banner-backdrop {
+  animation: bannerBackdropFade 0.35s ease forwards;
+}
+
+.banner-popup {
+  animation: bannerPopupFade 0.4s ease-out forwards;
+}

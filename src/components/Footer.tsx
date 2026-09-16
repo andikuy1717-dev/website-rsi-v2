@@ -5,10 +5,34 @@ import { Instagram, Facebook, Mail, Youtube, Linkedin } from "lucide-react";
 import { ID } from "@/lang/id";
 import { EN } from "@/lang/en";
 import { useLang } from "@/context/LanguageContext";
+import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 export default function Footer() {
   const { lang } = useLang();
   const t = lang === "ID" ? ID : EN;
+
+  const router = useRouter();
+
+  const showDevelopmentAlert = () => {
+    Swal.fire({
+      icon: "info",
+      text: "Menu ini sedang dalam tahap pengembangan",
+      confirmButtonText: "Mengerti",
+      confirmButtonColor: "#21368B",
+    });
+  };
+
+  const openLabResult = () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+
+    router.push("/akun/hasil-lab");
+  };
 
   return (
     <footer className="w-full bg-[#0A3FA9] text-white">
@@ -55,11 +79,47 @@ export default function Footer() {
           {/* MIDDLE */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">{t.forPatients}</h3>
-            <p className="text-sm opacity-90">{t.cariDokter}</p>
-            <p className="text-sm opacity-90">{t.layananKesehatan}</p>
-            <p className="text-sm opacity-90">{t.pusatInformasi}</p>
-            <p className="text-sm opacity-90">{t.hasilLabBeranda}</p>
-            <p className="text-sm opacity-90">{t.radiologi}</p>
+
+            <button
+              type="button"
+              onClick={() => router.push("/cari-dokter")}
+              className="block text-left text-sm opacity-90 transition hover:opacity-100 hover:underline"
+            >
+              {t.cariDokter}
+            </button>
+
+            <button
+              type="button"
+              onClick={showDevelopmentAlert}
+              className="block text-left text-sm opacity-90 transition hover:opacity-100 hover:underline"
+            >
+              {t.layananKesehatan}
+            </button>
+
+            <a
+              href="https://diklat.rsimmanuel.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-sm opacity-90 transition hover:opacity-100 hover:underline"
+            >
+              {t.pusatInformasi}
+            </a>
+
+            <button
+              type="button"
+              onClick={openLabResult}
+              className="block text-left text-sm opacity-90 transition hover:opacity-100 hover:underline"
+            >
+              {t.hasilLabBeranda}
+            </button>
+
+            <button
+              type="button"
+              onClick={showDevelopmentAlert}
+              className="block text-left text-sm opacity-90 transition hover:opacity-100 hover:underline"
+            >
+              {t.radiologi}
+            </button>
           </div>
 
           {/* RIGHT */}

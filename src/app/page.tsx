@@ -5,6 +5,9 @@ import LayananUnggulanSectionPage from "@/components/beranda/LayananUnggulanSect
 import RuanganDanKamar from "@/components/beranda/RuanganDanKamar";
 import CeritaPasienPage from "@/components/beranda/CeritaPasien";
 import SudahBuatJanjiTemuPage from "@/components/beranda/SudahBuatJanjiTemuPage";
+import ArtikelDanPromoPage from "@/components/beranda/ArtikelDanPromo";
+
+
 
 export default function Page() {
   return (
@@ -34,6 +37,9 @@ export default function Page() {
 
       {/* SUDAH BUAT JANJI TEMU */}
       <SudahBuatJanjiTemuPage/>
+
+      {/* ARTIKEL DAN PROMO */}
+      <ArtikelDanPromoPage/>
 
     </>
 

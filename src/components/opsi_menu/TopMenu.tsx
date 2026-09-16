@@ -8,6 +8,7 @@ import { EN } from "@/lang/en";
 import { useLang } from "@/context/LanguageContext";
 import { usePathname, useRouter } from "next/navigation";
 import { startLoading } from "@/utils/LoadingManager";
+import Swal from "sweetalert2";
 
 export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,11 +18,21 @@ export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
   const { lang } = useLang();
   const t = lang === "ID" ? ID : EN;
   const isCariDokter = pathname === "/cari-dokter";
+  const isPromo = pathname === "/promo";
+
+  const showDevelopmentAlert = () => {
+    Swal.fire({
+      icon: "info",
+      text: "Menu ini sedang dalam tahap pengembangan",
+      confirmButtonText: "Mengerti",
+      confirmButtonColor: "#21368B",
+    });
+  };
 
   return (
     <>
     <div className="sticky top-[calc(1.2rem+var(--banner-height))] sm:top-[calc(1.3rem+var(--banner-height))] md:top-[calc(1.7rem+var(--banner-height))] lg:top-[calc(2rem+var(--banner-height))] xl:top-[calc(2.3rem+var(--banner-height))] left-0 w-full bg-white shadow z-20" style={{ ["--banner-height" as any]: `${bannerHeight}px` }}>
-      <div className="mx-auto flex items-center px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 max-w-8xl h-10 sm:h-12 md:h-14 lg:h-16">        
+      <div className="mx-auto w-full flex items-center justify-between px-6 sm:px-8 md:px-12 lg:px-16 xl:px-18 max-w-8xl h-10 sm:h-12 md:h-14 lg:h-16">        
         {/* LOGO */}
         <div className="flex items-center">
           <img 
@@ -41,66 +52,25 @@ export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
               startLoading();
               router.push("/cari-dokter");
             }} />
-            <MenuItem label={t.layananKesehatan} dropdown />
+            <MenuItem label={t.layananKesehatan} onClick={showDevelopmentAlert} />
 
-            <MenuItem label={t.pusatInformasi} dropdown>
-              <div className="flex flex-col text-sm md:text-[10px] lg:text-[12px] xl:text-[14px]">
-              {[
-                "Komite Etik Penelitian Kesehatan (KEPK)",
-                "Clinical Research Unit (CRU)",
-                "Komite Koordinasi Pendidikan (Komkordik)",
-                "Diklat RS Immanuel",
-                "Edukasi Kesehatan",
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="
-                    relative px-5 py-3 cursor-pointer
-                    text-gray-700
-                    transition-colors duration-300
-                    hover:text-blue-600
-                    hover:bg-blue-50
+            <MenuItem label={t.pusatInformasi}   onClick={() => {
+              window.open("https://diklat.rsimmanuel.com", "_blank", "noopener,noreferrer");
+            }} />
 
-                    after:content-['']
-                    after:absolute
-                    after:left-0
-                    after:bottom-0
-                    after:h-[2px]
-                    after:w-full
-                    after:bg-blue-800
-                    after:scale-x-0
-                    after:origin-left
-                    after:transition-transform
-                    after:duration-300
+            {/* PROMO */}
+            <MenuItem
+              label="Promo"
+              disabled={isPromo}
+              onClick={() => {
+                if (isPromo) return;
 
-                    hover:after:scale-x-100
-                  "
-                  onClick={() => {
-                    startLoading();
-                    console.log("klik:", item);
-                  }}
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
-          </MenuItem>
+                startLoading();
+                router.push("/promo");
+              }}
+            />
+            
           </nav>
-
-          <div className="flex items-center gap-4">
-
-          {/* SEARCH BOX — hilang ≤ sm */}
-          <div className="hidden md:flex bg-gray-100 px-4 py-2 rounded-full items-center gap-2 cursor-pointer">
-            <span className="text-gray-500 text-[10px] sm:text-[11px] md:text-[12px] lg:text-[14px] xl:text-[16px]">
-              {t.cariDisini}
-            </span>
-            <FiSearch className="text-blue-500" size={18} />
-          </div>
-
-          {/* SEARCH ICON — selalu tampil ≤ sm */}
-          <div className="flex md:hidden cursor-pointer">
-            <FiSearch className="text-blue-500" size={20} />
-          </div>
 
           {/* HAMBURGER — tampil ≤ sm */}
           <button className="flex md:hidden text-blue-700 hover:text-blue-600 cursor-pointer" onClick={() => setMenuOpen(true)}>
@@ -111,7 +81,6 @@ export default function TopMenu({ bannerHeight }: { bannerHeight: number }) {
         </div>
 
       </div>
-    </div>
 
      {/* HAMBURGER MENU */}
       <HamburgerMenu open={menuOpen} onClose={() => setMenuOpen(false)} />

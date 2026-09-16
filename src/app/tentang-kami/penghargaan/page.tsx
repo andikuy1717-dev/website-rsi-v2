@@ -1,111 +1,132 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useFadeInOnScroll } from "@/hooks/useFadeInOnScroll";
 import { useLang } from "@/context/LanguageContext";
 import { ID } from "@/lang/id";
 import { EN } from "@/lang/en";
+import { getAwards, AwardItem } from "@/services/AwardService";
+
+function AwardTimelineItem({
+  item,
+  index,
+}: {
+  item: AwardItem;
+  index: number;
+}) {
+  const anim = useFadeInOnScroll();
+  const isLeft = index % 2 === 0;
+
+  return (
+    <div
+      ref={anim.ref}
+      className={`relative flex flex-col items-center md:flex-row ${
+        isLeft ? "md:justify-start" : "md:justify-end"
+      }`}
+    >
+      {/* DOT */}
+      <div className="absolute left-1/2 z-10 h-5 w-5 -translate-x-1/2 rounded-full border-4 border-white bg-blue-600" />
+
+      {/* CARD */}
+      <div
+        className={`w-full overflow-hidden rounded-2xl border border-slate-300 bg-white p-8 shadow-sm transition-all duration-700 md:w-[45%] ${
+          anim.isVisible
+            ? "translate-y-0 opacity-100"
+            : "translate-y-10 opacity-0"
+        } ${isLeft ? "md:mr-auto" : "md:ml-auto"}`}
+      >
+        <span className="text-lg font-bold text-blue-600">{item.year}</span>
+
+        <h3 className="mb-4 mt-2 text-xl font-semibold text-slate-800">
+          {item.title}
+        </h3>
+
+        <p className="leading-relaxed text-slate-600">{item.description}</p>
+      </div>
+    </div>
+  );
+}
 
 export default function PenghargaanPage() {
   const header = useFadeInOnScroll();
   const { lang } = useLang();
   const t = lang === "ID" ? ID : EN;
 
-  const penghargaanData = [
-  {
-    tahun: "2016",
-    judul: t.akreditasiParipurna,
-    deskripsi:t.deskripsiParipurna
-  },
-  {
-    tahun: "2018",
-    judul: t.re_akreditasiParipurna,
-    deskripsi: t.deskripsire_Paripurna
-  },
-  {
-    tahun: "2020",
-    judul: t.penghargaanJawaBarat,
-    deskripsi: t.deskripsiPenghargaanJawaBarat
-  },
-  {
-    tahun: "2021",
-    judul: "WSO Angels Awards",
-    deskripsi: t.deskripsiWsoAngel
-  },
-  {
-    tahun: "2021",
-    judul: t.penghargaanBapeten,
-    deskripsi: t.deskripsiPenghargaanBapeten
-  }
-];
+  const [awards, setAwards] = useState<AwardItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAwards = async () => {
+      try {
+        setLoading(true);
+
+        const result = await getAwards();
+
+        if (result.success && Array.isArray(result.data)) {
+          const sortedAwards = [...result.data].sort(
+            (a, b) => a.order - b.order
+          );
+
+          setAwards(sortedAwards);
+        } else {
+          setAwards([]);
+        }
+      } catch (error) {
+        console.error("Gagal mengambil data penghargaan:", error);
+        setAwards([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAwards();
+  }, []);
 
   return (
     <section className="min-h-screen px-6 md:px-20">
-
       {/* HEADER */}
       <div
         ref={header.ref}
-        className={`max-w-3xl mx-auto text-center mb-24 transition-all duration-700
-          ${header.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}
-        `}
+        className={`mx-auto mb-24 max-w-3xl text-center transition-all duration-700 ${
+          header.isVisible
+            ? "translate-y-0 opacity-100"
+            : "translate-y-10 opacity-0"
+        }`}
       >
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 mb-6">
+        <h1 className="mb-6 text-4xl font-extrabold text-slate-800 md:text-5xl">
           {t.penghargaan}
         </h1>
-        <p className="text-lg text-slate-600">
-          {t.kalimatPenghargaan}
-        </p>
+
+        <p className="text-lg text-slate-600">{t.kalimatPenghargaan}</p>
       </div>
+
+      {/* LOADING */}
+      {loading && (
+        <div className="flex justify-center py-16">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-[#21368B]" />
+        </div>
+      )}
+
+      {/* EMPTY */}
+      {!loading && awards.length === 0 && (
+        <div className="py-16 text-center text-slate-500">
+          Belum ada data penghargaan.
+        </div>
+      )}
 
       {/* TIMELINE */}
-      <div className="relative max-w-5xl mx-auto">
+      {!loading && awards.length > 0 && (
+        <div className="relative mx-auto max-w-5xl">
+          {/* PIPA VERTIKAL */}
+          <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-slate-400" />
 
-        {/* PIPA VERTIKAL */}
-        <div className="absolute left-1/2 top-0 h-full w-px bg-slate-400 -translate-x-1/2" />
-
-        <div className="space-y-20">
-          {penghargaanData.map((item, index) => {
-            const anim = useFadeInOnScroll();
-            const isLeft = index % 2 === 0;
-
-            return (
-              <div
-                key={index}
-                ref={anim.ref}
-                className={`relative flex flex-col md:flex-row items-center
-                  ${isLeft ? "md:justify-start" : "md:justify-end"}
-                `}
-              >
-                {/* DOT */}
-                <div className="absolute left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-blue-600 border-4 border-white" />
-
-                {/* CARD */}
-                <div
-                  className={`w-full md:w-[45%] bg-white border border-slate-300 rounded-2xl p-8 shadow-sm overflow-hidden transition-all duration-700
-                    ${anim.isVisible
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-10"
-                    }
-                    ${isLeft ? "md:mr-auto" : "md:ml-auto"}
-                  `}
-                >
-                  <span className="text-blue-600 font-bold text-lg">
-                    {item.tahun}
-                  </span>
-
-                  <h3 className="text-xl font-semibold text-slate-800 mt-2 mb-4">
-                    {item.judul}
-                  </h3>
-
-                  <p className="text-slate-600 leading-relaxed">
-                    {item.deskripsi}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
+          <div className="space-y-20">
+            {awards.map((item, index) => (
+              <AwardTimelineItem key={item.id} item={item} index={index} />
+            ))}
+          </div>
         </div>
-      </div>
-
+      )}
     </section>
   );
 }
