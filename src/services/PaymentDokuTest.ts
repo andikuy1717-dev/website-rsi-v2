@@ -73,6 +73,23 @@ export async function createPaymentTest(
 
     const data = JSON.parse(raw);
 
+    // Simpan invoice sebelum browser diarahkan ke DOKU.
+    const invoiceNumber =
+      data?.response?.order?.invoice_number ??
+      data?.invoiceNumber;
+
+    if (invoiceNumber) {
+      localStorage.setItem(
+        "paymentTestInvoice",
+        String(invoiceNumber)
+      );
+
+      console.log(
+        "PAYMENT TEST INVOICE DISIMPAN:",
+        invoiceNumber
+      );
+    }
+
     if (!res.ok) {
       return {
         message: ["HTTP ERROR " + res.status],

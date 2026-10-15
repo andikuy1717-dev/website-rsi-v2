@@ -20,15 +20,31 @@ export default function PaymentSuccessModal() {
 
   const [isOpen, setIsOpen] = useState(false);
   const [payment, setPayment] =
-    useState<PaymentSuccessDetail>({});
+  useState<PaymentSuccessDetail>({});
 
   useEffect(() => {
     let checking = false;
     let intervalId: ReturnType<typeof setInterval> | undefined;
     let isMounted = true;
 
+    // 🔥 DENGARKAN EVENT PEMBAYARAN BERHASIL
+    const handlePaymentSuccess = (
+      event: WindowEventMap["payment-success"]
+    ) => {
+      if (!isMounted) return;
+
+      setPayment(event.detail);
+      setIsOpen(true);
+    };
+
+    window.addEventListener(
+      "payment-success",
+      handlePaymentSuccess
+    );
+
+    // 🔥 CEK STATUS PEMBAYARAN DARI BACKEND
     const checkPaymentStatus = async () => {
-      if (checking) return;
+      if (checking || !isMounted) return;
 
       const invoiceNumber = localStorage.getItem(
         "paymentTestInvoice"
@@ -49,7 +65,7 @@ export default function PaymentSuccessModal() {
             amount: Number(result.amount),
           };
 
-          // Gunakan event yang sudah ada agar mekanisme modal tetap konsisten.
+          // Event ini akan diterima handlePaymentSuccess.
           window.dispatchEvent(
             new CustomEvent("payment-success", {
               detail: paymentDetail,
@@ -72,12 +88,20 @@ export default function PaymentSuccessModal() {
       }
     };
 
-    checkPaymentStatus();
+    void checkPaymentStatus();
 
-    intervalId = setInterval(checkPaymentStatus, 3000);
+    intervalId = setInterval(
+      () => void checkPaymentStatus(),
+      3000
+    );
 
     return () => {
       isMounted = false;
+
+      window.removeEventListener(
+        "payment-success",
+        handlePaymentSuccess
+      );
 
       if (intervalId) {
         clearInterval(intervalId);

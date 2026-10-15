@@ -834,32 +834,35 @@ function JanjiTemuContent() {
           "
         />
 
-        {/* ================= HERO BANNER SECTION ================= */}
-        <div className="w-full bg-[#182772] px-6 pb-20 pt-15 text-white sm:px-8 sm:pb-24 md:px-12 lg:px-16 xl:px-20">
-          <div className="mx-auto w-full max-w-[1440px]">
-            <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
+      {/* ================= HERO BANNER SECTION ================= */}
+      <div className="w-full bg-[#182772] text-white">
+        <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-10 sm:px-8 sm:pb-20 sm:pt-12 md:px-10 lg:px-12 lg:pb-24 lg:pt-14 xl:px-16 2xl:px-20">
+          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
 
-              <div className="flex max-w-xl flex-col gap-3">
+            {/* KIRI: Breadcrumb, Judul, dan Deskripsi */}
+            <div className="flex min-w-0 max-w-xl flex-col gap-3">
 
-                <p className="text-xs font-normal leading-none text-white/75 sm:text-sm">
-                  Beranda / Cari Dokter / Buat Janji Temu
+              {/* BREADCRUMB */}
+              <p className="text-xs font-normal leading-relaxed text-white/75 sm:text-sm">
+                Beranda / Cari Dokter / Buat Janji Temu
+              </p>
+
+              <div>
+                {/* JUDUL */}
+                <h1 className="mb-3 text-[32px] font-extrabold leading-[1.15] tracking-tight text-white sm:text-[38px] md:text-[44px] lg:text-[48px] xl:text-[52px]">
+                  {t.bookAppointment}
+                </h1>
+
+                {/* DESKRIPSI */}
+                <p className="max-w-xl text-sm font-normal leading-[1.7] text-[#C2CEEB] sm:text-base lg:text-[17px]">
+                  {t.pilihJadwalKunjunganDokter}
                 </p>
-
-                <div>
-                  <h1 className="mb-3 text-[32px] font-extrabold leading-[1.15] tracking-tight text-white sm:text-[42px] md:text-[48px] lg:text-[52px] lg:leading-[1.1]">
-                    {t.bookAppointment}
-                  </h1>
-
-                  <p className="max-w-xl text-[14px] font-normal leading-[1.6] text-[#C2CEEB] sm:text-base md:text-[17px]">
-                    {t.pilihJadwalKunjunganDokter}
-                  </p>
-                </div>
-
               </div>
 
             </div>
           </div>
         </div>
+      </div>
 
       </section>
 

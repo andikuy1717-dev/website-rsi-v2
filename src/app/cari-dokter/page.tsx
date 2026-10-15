@@ -422,30 +422,30 @@ export default function CariDokterPage() {
     <div className={`${plusJakartaSans.className} w-full bg-[#F3F5FB] min-h-screen`}>
       
       {/* ================= HERO BANNER SECTION ================= */}
-      <div className="w-full bg-[#182772] px-6 pb-20 pt-15 text-white sm:px-8 sm:pb-24 md:px-12 lg:px-16 xl:px-20">
-        <div className="mx-auto w-full max-w-[1440px]">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
+      <div className="w-full bg-[#182772] text-white">
+        <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-10 sm:px-8 sm:pb-20 sm:pt-12 md:px-10 lg:px-12 lg:pb-24 lg:pt-14 xl:px-16 2xl:px-20">
+          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center lg:gap-10">
             {/* KIRI: Breadcrumb, Judul, dan Deskripsi */}
-            <div className="flex max-w-xl flex-col gap-3">
-              <p className="text-xs font-normal leading-none text-white/75 sm:text-sm">
+            <div className="flex min-w-0 max-w-xl flex-col gap-3 lg:flex-1">
+              <p className="text-xs font-normal leading-relaxed text-white/75 sm:text-sm">
                 Beranda / Cari Dokter
               </p>
 
               <div>
-                <h1 className="mb-3 text-[32px] font-extrabold leading-[1.15] tracking-tight text-white sm:text-[42px] md:text-[48px] lg:text-[52px] lg:leading-[1.1]">
+                <h1 className="mb-3 text-[32px] font-extrabold leading-[1.15] tracking-tight text-white sm:text-[38px] md:text-[44px] lg:text-[48px] xl:text-[52px]">
                   Cari Dokter
                 </h1>
 
-                <p className="max-w-xl text-[14px] font-normal leading-[1.6] text-[#C2CEEB] sm:text-base md:text-[17px]">
-                  Temukan dokter dan jadwal praktiknya, lalu buat janji temu{" "}
-                  <br className="hidden sm:inline" />
-                  langsung dari sini.
+                <p className="max-w-xl text-sm font-normal leading-[1.7] text-[#C2CEEB] sm:text-base lg:text-[17px]">
+                  Temukan dokter dan jadwal praktiknya, lalu buat janji temu
+                  <br className="hidden xl:inline" />
+                  {" "}langsung dari sini.
                 </p>
               </div>
             </div>
 
-            {/* KANAN: Foto dokter — sembunyikan di mobile */}
-            <div className="relative hidden h-[180px] w-[440px] shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 lg:block xl:h-[200px] xl:w-[480px]">
+            {/* KANAN: Foto dokter */}
+            <div className="relative hidden h-[160px] w-full shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 lg:block lg:max-w-[360px] xl:h-[190px] xl:max-w-[420px] 2xl:h-[200px] 2xl:max-w-[480px]">
               <img
                 src="/foto_kumpul_dokter.png"
                 alt="Tim Dokter RS Immanuel"

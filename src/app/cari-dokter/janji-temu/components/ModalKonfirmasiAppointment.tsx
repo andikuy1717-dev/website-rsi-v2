@@ -133,9 +133,6 @@ export default function ModalKonfirmasiMitra({
               {t.konfirmasiAppointment}
             </h2>
 
-            <p className="mt-2 max-w-[390px] text-sm leading-6 text-blue-100/85">
-              {t.mohonPeriksaKembaliDataAnda}
-            </p>
           </div>
         </div>
 

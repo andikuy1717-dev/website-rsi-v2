@@ -83,9 +83,6 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
             )}
 
             {children}
-
-            {/* Global Payment Success Modal */}
-            <PaymentSuccessModal />
           </>
         ) : (
           <>
@@ -138,6 +135,9 @@ export default function LayoutWrapper({ children }: { children: ReactNode }) {
         <Footer />
       </>
       )}
+      
+      {/* Modal pembayaran global */}
+      <PaymentSuccessModal />
     </>
   );
 }

@@ -162,31 +162,43 @@ export default function EdukasiKesehatanPage() {
 
   return (
     <main className={`${plusJakartaSans.className} min-h-screen bg-white text-[#172453]`}>
-      {/* HERO: gutters, breadcrumb, and heading align with Cari Dokter */}
-      <section className="bg-[#182772] px-6 pb-20 pt-20 text-white sm:px-8 sm:pb-24 md:px-12 lg:px-16 xl:px-20">
-        <div className="mx-auto w-full max-w-[1440px]">
-          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
-            <div className="flex max-w-[780px] flex-col gap-3">
-              <p className="font-normal leading-none text-white/75 sm:text-sm">
+      {/* HERO: full-width background, content constrained to max-w */}
+      <section className="w-full bg-[#182772] text-white">
+        <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-12 sm:px-8 sm:pb-20 sm:pt-14 md:px-10 lg:px-12 lg:pb-24 lg:pt-16 xl:px-16 xl:pt-20 2xl:px-20">
+          <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center lg:gap-10">
+            {/* KIRI: Breadcrumb, Judul, dan Deskripsi */}
+            <div className="flex min-w-0 max-w-[780px] flex-col gap-3 lg:flex-1">
+              <p className="text-xs font-normal leading-relaxed text-white/75 sm:text-sm">
                 Beranda / Edukasi Kesehatan
               </p>
+
               <div>
-                <h1 className="mb-3 text-[32px] font-extrabold leading-[1.15] tracking-tight text-white sm:text-[42px] md:text-[48px] lg:text-[52px] lg:leading-[1.1]">
+                <h1 className="mb-3 text-[32px] font-extrabold leading-[1.15] tracking-tight text-white sm:text-[38px] md:text-[44px] lg:text-[48px] xl:text-[52px]">
                   {t.infoSehat}
                 </h1>
-                <p className="max-w-[720px] text-[14px] font-normal leading-[1.6] text-[#C2CEEB] sm:text-base md:text-[17px]">
-                  Artikel kesehatan dan penelitian klinis dari tim medis, perawat, dan edukator kesehatan RS Immanuel Bandung. Beberapa dilengkapi video dari YouTube kami.
+
+                <p className="max-w-[720px] text-sm font-normal leading-[1.7] text-[#C2CEEB] sm:text-base lg:text-[17px]">
+                  Artikel kesehatan dan penelitian klinis dari tim medis, perawat,
+                  dan edukator kesehatan RS Immanuel Bandung. Beberapa dilengkapi
+                  video dari YouTube kami.
                 </p>
               </div>
             </div>
+
+            {/* KANAN: Tombol YouTube */}
             <a
               href={YOUTUBE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-fit shrink-0 items-center gap-3 rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#172453] transition hover:bg-[#F1F3FA]"
+              className="inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-3 self-start rounded-xl bg-white px-4 py-3 text-sm font-bold text-[#172453] transition hover:bg-[#F1F3FA] sm:px-5 lg:self-center"
             >
-              <span className="text-lg leading-none text-[#D5231D]" aria-hidden="true">▶</span>
-              Tonton Channel YouTube
+              <span
+                className="shrink-0 text-lg leading-none text-[#D5231D]"
+                aria-hidden="true"
+              >
+                ▶
+              </span>
+              <span>Tonton Channel YouTube</span>
             </a>
           </div>
         </div>
