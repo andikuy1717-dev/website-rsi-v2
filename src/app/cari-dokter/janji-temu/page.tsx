@@ -10,7 +10,7 @@ import { checkBRS } from "@/services/CheckPatientBRS"; // import service baru
 import { startLoading, endLoading } from "@/utils/LoadingManager";
 import DatePicker from "react-datepicker";
 import { id, enUS } from "date-fns/locale";
-import { FiCalendar } from "react-icons/fi";
+import { FiCalendar, FiClock, FiArrowLeft, FiCheckCircle, FiUser } from "react-icons/fi";
 import { useLang } from "@/context/LanguageContext";
 import { ID } from "@/lang/id";
 import { EN } from "@/lang/en";
@@ -23,7 +23,7 @@ import { getPatientByMedicalNo } from "@/services/GetPatientByMedicalNoForPatien
 import { createTransactionMitra } from "@/services/TransactionMitraService";
 import { getAppointmentByMedicalNo } from "@/services/GetAppointmentByMedicalNo";
 import { fetchAutoBillingList, AutoBillingResponse } from "@/services/RegistrationAutoBillingService";
-import { PaymentRequest, PaymentResponse, createPayment } from "@/services/PaymentDoku";
+import { PaymentTestRequest, PaymentTestResponse, createPaymentTest } from "@/services/PaymentDokuTest";
 
 type DoctorDetail = {
   paramedicid: string;
@@ -51,7 +51,7 @@ function JanjiTemuContent() {
   const [doctorSchedules, setDoctorSchedules] = useState<ParamedicSchedule[]>([]);
   const [selectedSchedule, setSelectedSchedule] = useState<ParamedicSchedule | null>(null);
 
-  type PatientType = "Tunai" | "Mitra" | "Ybrs";
+  type PatientType = "Tunai" | "Mitra" | "YBRS";
   const [patientType, setPatientType] = useState<PatientType | null>(null);
 
   const isFormComplete = Boolean(patientType) && Boolean(selectedPeserta) && Boolean(selectedSchedule);
@@ -100,7 +100,7 @@ function JanjiTemuContent() {
         return t.pasienTunai;
       case "Mitra":
         return t.pasienMitra;
-      case "Ybrs":
+      case "YBRS":
         return t.pasienYBRS;
       default:
         return type;
@@ -147,7 +147,7 @@ function JanjiTemuContent() {
   }, []);
 
   useEffect(() => {
-    if (patientType !== "Ybrs") {
+    if (patientType !== "YBRS") {
       setBrsUnitIds(new Set());
       return;
     }
@@ -202,11 +202,43 @@ function JanjiTemuContent() {
           placeholder={placeholder}
           readOnly
           inputMode="none"
-          className="w-full border border-gray-400 rounded-lg px-4 py-3 text-base text-gray-700 cursor-pointer caret-transparent focus:border-blue-600 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+          className="
+            w-full
+            h-[52px]
+            rounded-xl
+            border
+            border-[#DCE1EE]
+            bg-white
+            px-4
+            pr-12
+            text-[13px]
+            sm:text-[14px]
+            font-medium
+            text-[#1B2A78]
+            cursor-pointer
+            caret-transparent
+            outline-none
+            transition-all
+            hover:border-[#AEB8D5]
+            focus:border-[#1B2A78]
+            focus:ring-2
+            focus:ring-[#1B2A78]/10
+          "
         />
 
-        {/* ICON */}
-        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-blue-600">
+        <div
+          className="
+            pointer-events-none
+            absolute
+            right-4
+            top-1/2
+            -translate-y-1/2
+            flex
+            items-center
+            justify-center
+            text-[#1B2A78]
+          "
+        >
           <FiCalendar size={18} />
         </div>
       </div>
@@ -673,14 +705,17 @@ function JanjiTemuContent() {
         router.push("/cari-dokter");
       } 
       else if (patientType === "Tunai") {
-        // 🔹 TUNAI → Simpan payload untuk Doku & redirect ke payment page
-        const paymentPayload: PaymentRequest = {
-          type: "doku", // penting supaya bukan BRS
+        // 🔹 TUNAI → TEST DOKU SANDBOX
+
+        const paymentPayload: PaymentTestRequest = {
+          type: "doku",
           appointmentNo,
           medicalNo: patient.data.MedicalNo,
           paramedicName: doctor.paramedicname,
           serviceUnitName: selectedSchedule.ServiceUnitName,
+
           amount: billingTotal?.toString() ?? "0",
+
           name: patient.data.FirstName,
           lastname: patient.data.LastName || "",
           phone: patient.data.MobilePhoneNo || "",
@@ -690,28 +725,33 @@ function JanjiTemuContent() {
           state: patient.data.District || "-",
           city: patient.data.City || "-",
           country: patient.data.County || "-",
-          //deviceToken: "",
         };
 
-        // 🔥 CALL API PAYMENT (INI YANG KURANG)
-        const payment: PaymentResponse = await createPayment(paymentPayload);
+        // 🔥 CALL DOKU SANDBOX
+        const payment: PaymentTestResponse =
+          await createPaymentTest(paymentPayload);
 
-        console.log("PAYMENT RESPONSE:", payment);
+        console.log("PAYMENT TEST RESPONSE:", payment);
 
         if (!payment?.response) {
           await Swal.fire({
             icon: "error",
-            title: lang === "ID" ? "Payment gagal" : "Payment failed",
+            title:
+              lang === "ID"
+                ? "Payment gagal"
+                : "Payment failed",
             text: Array.isArray(payment?.message)
               ? payment.message.join(", ")
               : payment?.message || "Terjadi kesalahan",
             scrollbarPadding: false,
           });
+
           return;
         }
 
+        // 🔥 AMBIL CHECKOUT URL DOKU SANDBOX
         const checkoutUrl =
-          payment.response?.payment?.url ||   // 🔥 ini struktur asli dari backend lu
+          payment.response?.payment?.url ||
           payment.response?.checkoutUrl ||
           payment.response?.paymentUrl ||
           payment.response?.url;
@@ -721,15 +761,23 @@ function JanjiTemuContent() {
             icon: "error",
             title: "Payment error",
             text: "Checkout URL tidak ditemukan",
+            scrollbarPadding: false,
           });
+
           return;
         }
 
-        // 🔥 OPEN TAB BARU KE DOKU
-        window.open(checkoutUrl, "_blank", "noopener,noreferrer");
-        router.push("/cari-dokter");
+        console.log("DOKU SANDBOX CHECKOUT URL:", checkoutUrl);
 
-      } 
+        // 🔥 BUKA DOKU SANDBOX
+        window.open(
+          checkoutUrl,
+          "_blank",
+          "noopener,noreferrer"
+        );
+
+        router.push("/cari-dokter");
+      }
       else {
         await Swal.fire({
           icon: "success",
@@ -752,284 +800,1080 @@ function JanjiTemuContent() {
   };
 
   return (
-    <div className="w-full mx-auto px-6 sm:px-8 md:px-10 lg:px-12 xl:px-16 max-w-8xl py-12">
+    <div className="w-full min-h-screen bg-[#F4F6FC]">
 
-      {/* ================= PAGE TITLE ================= */}
-      <div className="mb-6">
-        <h1 className="text-[24px] sm:text-[24px] md:text-[24px] lg:text-[24px] xl:text-[26px] font-bold text-gray-900">
-          {t.bookAppointment}
-        </h1>
-        <p className="text-gray-400 text-[14px] sm:text-[14px] md:text-[14px] lg:text-[13px] xl:text-[14px] mt-1">
-          {t.pilihJadwalKunjunganDokter}
-        </p>
-      </div>
+      {/* =========================================================
+          HERO
+      ========================================================== */}
+      <section className="relative overflow-hidden bg-[#1B2A78]">
 
-      {/* ================= GRID ================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+        {/* Decorative background */}
+        <div
+          className="
+            absolute
+            -right-24
+            -top-24
+            h-[320px]
+            w-[320px]
+            rounded-full
+            bg-white/5
+            blur-3xl
+          "
+        />
 
-        {/* ================= LEFT : INFO DOKTER ================= */}
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-400">
-            <div className="flex items-center gap-4">
+        <div
+          className="
+            absolute
+            left-1/3
+            bottom-[-120px]
+            h-[240px]
+            w-[240px]
+            rounded-full
+            bg-[#E0A918]/10
+            blur-3xl
+          "
+        />
 
-              {/* FOTO */}
-              <Image
-                src={
-                  doctor?.foto_base64
-                    ? `data:image/jpeg;base64,${doctor.foto_base64}`
-                    : "/doctor_dummy.png"
-                }
-                alt="Doctor"
-                width={60}
-                height={60}
-                className="rounded-full object-cover border"
-              />
+        {/* ================= HERO BANNER SECTION ================= */}
+        <div className="w-full bg-[#182772] px-6 pb-20 pt-15 text-white sm:px-8 sm:pb-24 md:px-12 lg:px-16 xl:px-20">
+          <div className="mx-auto w-full max-w-[1440px]">
+            <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-center">
 
-              {/* INFO */}
-              <div className="flex-1">
-                {error ? (
-                  <p className="text-red-500 text-sm">{error}</p>
-                ) : doctor ? (
-                  <>
-                    <p className="font-semibold text-[13px] sm:text-[13px] md:text-[13px] lg:text-[12px] xl:text-[13px] text-gray-900 leading-snug">
-                      {doctor.paramedicname}
-                    </p>
-                    <p className="text-[11px] sm:text-[11px] md:text-[11px] lg:text-[10px] xl:text-[11px] text-gray-400">
-                      {doctor?.serviceunitnames?.map((name, i) => (
-                        <span key={i} className="block">{name}</span>
-                      ))}
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-sm text-gray-400">
-                   {t.memuatJadwalDokter}
+              <div className="flex max-w-xl flex-col gap-3">
+
+                <p className="text-xs font-normal leading-none text-white/75 sm:text-sm">
+                  Beranda / Cari Dokter / Buat Janji Temu
+                </p>
+
+                <div>
+                  <h1 className="mb-3 text-[32px] font-extrabold leading-[1.15] tracking-tight text-white sm:text-[42px] md:text-[48px] lg:text-[52px] lg:leading-[1.1]">
+                    {t.bookAppointment}
+                  </h1>
+
+                  <p className="max-w-xl text-[14px] font-normal leading-[1.6] text-[#C2CEEB] sm:text-base md:text-[17px]">
+                    {t.pilihJadwalKunjunganDokter}
                   </p>
-                )}
+                </div>
+
               </div>
+
             </div>
           </div>
         </div>
 
-      {/* ================= RIGHT : BOOKING ================= */}
-        <div className="lg:col-span-3">
-          <div className="sticky top-24">
-            <div className="bg-white rounded-2xl p-6 md:p-8 shadow-md border border-gray-400">
+      </section>
 
-              <h3 className="text-[16px] sm:text-[18px] md:text-[18px] lg:text-[18px] xl:text-[20px] font-semibold text-gray-900 mb-4">
-                {t.jadwalDanPemesanan} : {doctor?.paramedicname}
-              </h3>
+      {/* =========================================================
+          MAIN CONTENT
+          Overlap hero seperti halaman Cari Dokter
+      ========================================================== */}
+      <main
+          className="
+            relative
+            mx-auto
+            -mt-[50px]
+            w-full
+            max-w-[1280px]
+            px-5
+            sm:px-6
+            lg:px-8
+            pb-12
+          "
+        >
 
-             {/* ================= JENIS PASIEN ================= */}
-              <div className="mt-6 mb-8 rounded-xl border border-gray-400 bg-white">
-                <div className="px-6 py-4">
-                  <p className="text-[16px] sm:text-[14px] md:text-[16px] lg:text-[15px] xl:text-[16px] mb-4 font-medium text-gray-700">
-                    {t.sebagaiPasien}
+        {/* =======================================================
+            BOOKING CARD
+        ======================================================== */}
+        <section
+          className="
+            relative
+            rounded-[20px]
+            border
+            border-[#E0E4EF]
+            bg-white
+            shadow-[0_16px_40px_rgba(13,22,66,0.10)]
+          "
+        >
+
+          {/* ================= CARD HEADER ================= */}
+          <div
+            className="
+              border-b
+              border-[#E8EAF1]
+              px-5
+              sm:px-7
+              lg:px-8
+              py-5
+              sm:py-6
+            "
+          >
+
+            <div
+              className="
+                flex
+                flex-col
+                sm:flex-row
+                sm:items-center
+                sm:justify-between
+                gap-3
+              "
+            >
+
+              <div>
+
+                <p
+                  className="
+                    text-[10px]
+                    sm:text-[11px]
+                    font-bold
+                    uppercase
+                    tracking-[0.12em]
+                    text-[#E0A918]
+                  "
+                >
+                  Jadwal & Pemesanan
+                </p>
+
+                <h2
+                  className="
+                    mt-1
+                    text-[18px]
+                    sm:text-[21px]
+                    lg:text-[23px]
+                    font-extrabold
+                    tracking-[-0.025em]
+                    text-[#0D1642]
+                  "
+                >
+                  {doctor?.paramedicname || "Dokter"}
+                </h2>
+
+              </div>
+
+
+              {/* Doctor unit */}
+              {doctor?.serviceunitnames?.length ? (
+                <div
+                  className="
+                    flex
+                    flex-wrap
+                    gap-2
+                  "
+                >
+                  {doctor.serviceunitnames.map((name, index) => (
+                    <span
+                      key={index}
+                      className="
+                        rounded-full
+                        bg-[#F1F3FA]
+                        px-3
+                        py-1.5
+                        text-[10px]
+                        sm:text-[11px]
+                        font-semibold
+                        text-[#1B2A78]
+                      "
+                    >
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              ) : null}
+
+            </div>
+
+          </div>
+
+
+          {/* =====================================================
+              FORM CONTENT
+          ====================================================== */}
+          <div className="px-5 sm:px-7 lg:px-8 py-6 sm:py-7 lg:py-8">
+
+
+            {/* ===================================================
+                DOCTOR MOBILE CARD
+            ==================================================== */}
+            <div
+              className="
+                mb-7
+                flex
+                sm:hidden
+                items-center
+                gap-4
+                rounded-2xl
+                border
+                border-[#E3E6EF]
+                bg-[#F8F9FD]
+                p-4
+              "
+            >
+
+              <div
+                className="
+                  h-[64px]
+                  w-[64px]
+                  shrink-0
+                  overflow-hidden
+                  rounded-xl
+                  bg-[#E9ECF7]
+                "
+              >
+                <Image
+                  src={
+                    doctor?.foto_base64
+                      ? `data:image/jpeg;base64,${doctor.foto_base64}`
+                      : "/doctor_dummy.png"
+                  }
+                  alt="Doctor"
+                  width={64}
+                  height={64}
+                  className="
+                    h-full
+                    w-full
+                    object-cover
+                  "
+                />
+              </div>
+
+              <div className="min-w-0">
+
+                {error ? (
+                  <p className="text-[12px] text-red-500">
+                    {error}
                   </p>
+                ) : doctor ? (
+                  <>
+                    <p
+                      className="
+                        text-[14px]
+                        font-extrabold
+                        leading-snug
+                        text-[#0D1642]
+                      "
+                    >
+                      {doctor.paramedicname}
+                    </p>
 
-                  {(() => {
-                    const patientOptions = [
-                      { label: t.pasienTunai, value: "Tunai" },
-                      { label: t.pasienMitra, value: "Mitra" },
-                      { label: t.pasienYBRS, value: "YBRS" },
-                    ].filter(item => item.value.toUpperCase() !== "YBRS" || hasBRS);
+                    <div className="mt-1">
+                      {doctor.serviceunitnames?.map((name, i) => (
+                        <p
+                          key={i}
+                          className="
+                            text-[11px]
+                            leading-5
+                            text-[#747B90]
+                          "
+                        >
+                          {name}
+                        </p>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <p className="text-[12px] text-gray-400">
+                    {t.memuatJadwalDokter}
+                  </p>
+                )}
 
-                    const desktopCols = patientOptions.length === 2 ? "md:grid-cols-2 lg:grid-cols-2" : "grid-cols-1 md:grid-cols-3";
+              </div>
 
-                    return (
-                      <div className={`grid grid-cols-1 sm:grid-cols-1 gap-4 ${desktopCols}`}>
-                        {patientOptions.map((item) => (
-                          <label
-                            key={item.value}
+            </div>
+
+
+            {/* ===================================================
+                JENIS PASIEN
+            ==================================================== */}
+            <div>
+
+              <div className="mb-3">
+
+                <h3
+                  className="
+                    text-[14px]
+                    sm:text-[15px]
+                    font-extrabold
+                    text-[#0D1642]
+                  "
+                >
+                  {t.sebagaiPasien}
+                </h3>
+
+                <p
+                  className="
+                    mt-1
+                    text-[11px]
+                    sm:text-[12px]
+                    text-[#8A90A3]
+                  "
+                >
+                  Pilih jenis pasien untuk melanjutkan pendaftaran.
+                </p>
+
+              </div>
+
+
+              {(() => {
+
+                const patientOptions = [
+                  {
+                    label: t.pasienTunai,
+                    value: "Tunai",
+                  },
+                  {
+                    label: t.pasienMitra,
+                    value: "Mitra",
+                  },
+                  {
+                    label: t.pasienYBRS,
+                    value: "YBRS",
+                  },
+                ].filter(
+                  item =>
+                    item.value.toUpperCase() !== "YBRS" ||
+                    hasBRS
+                );
+
+
+                const desktopCols =
+                  patientOptions.length === 2
+                    ? "sm:grid-cols-2"
+                    : "sm:grid-cols-3";
+
+
+                return (
+                  <div
+                    className={`
+                      grid
+                      grid-cols-1
+                      ${desktopCols}
+                      gap-3
+                    `}
+                  >
+
+                    {patientOptions.map(item => {
+
+                      const selected =
+                        patientType === item.value;
+
+
+                      return (
+                        <label
+                          key={item.value}
+                          className={`
+                            group
+                            relative
+                            flex
+                            min-h-[62px]
+                            items-center
+                            gap-3
+                            rounded-xl
+                            border
+                            px-4
+                            py-3
+                            cursor-pointer
+                            transition-all
+                            duration-200
+
+                            ${
+                              selected
+                                ? `
+                                  border-[#1B2A78]
+                                  bg-[#F3F5FB]
+                                  ring-1
+                                  ring-[#1B2A78]/10
+                                `
+                                : `
+                                  border-[#E1E5EF]
+                                  bg-white
+                                  hover:border-[#AEB7D2]
+                                  hover:bg-[#FAFBFE]
+                                `
+                            }
+                          `}
+                        >
+
+                          <input
+                            type="radio"
+                            name="patient-type"
+                            value={item.value}
+                            checked={selected}
+                            onChange={() =>
+                              setPatientType(
+                                item.value as PatientType
+                              )
+                            }
+                            className="
+                              h-4
+                              w-4
+                              shrink-0
+                              accent-[#1B2A78]
+                            "
+                          />
+
+                          <span
                             className={`
-                              flex items-center gap-3 px-4 py-3 rounded-lg border transition cursor-pointer
-                              ${patientType === item.value
-                                ? "border-blue-500 bg-blue-50"
-                                : "border-gray-400 bg-white hover:border-blue-400"
+                              text-[13px]
+                              sm:text-[14px]
+                              font-bold
+                              transition-colors
+
+                              ${
+                                selected
+                                  ? "text-[#1B2A78]"
+                                  : "text-[#39415A]"
                               }
                             `}
                           >
-                            <input
-                              type="radio"
-                              name="patient-type"
-                              value={item.value}
-                              checked={patientType === item.value}
-                              onChange={() => setPatientType(item.value as PatientType)}
-                              className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                            />
+                            {item.label}
+                          </span>
 
-                            <span className="text-[16px] sm:text-[14px] md:text-[16px] lg:text-[15px] xl:text-[16px] font-semibold text-gray-700">
-                              {item.label}
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-                    );
-                  })()}
-                </div>
+
+                          {selected && (
+                            <FiCheckCircle
+                              size={17}
+                              className="
+                                absolute
+                                right-4
+                                text-[#1B2A78]
+                              "
+                            />
+                          )}
+
+                        </label>
+                      );
+
+                    })}
+
+                  </div>
+                );
+
+              })()}
+
+            </div>
+
+
+            {/* ===================================================
+                PESERTA + TANGGAL
+            ==================================================== */}
+            <div
+              className="
+                mt-7
+                grid
+                grid-cols-1
+                md:grid-cols-2
+                gap-5
+              "
+            >
+
+              {/* ================= PESERTA ================= */}
+              <div>
+
+                <label
+                  className="
+                    mb-2
+                    block
+                    text-[12px]
+                    font-bold
+                    text-[#0D1642]
+                  "
+                >
+                  {t.pilihPeserta}
+                </label>
+
+
+                <Select
+                  instanceId="peserta-select"
+                  options={pesertaOptions}
+                  placeholder={t.pilihPeserta}
+                  isSearchable
+                  isClearable
+                  value={
+                    pesertaOptions.find(
+                      o =>
+                        o.value ===
+                        selectedPeserta?.value
+                    ) || null
+                  }
+                  onChange={val =>
+                    setSelectedPeserta(val)
+                  }
+                  classNamePrefix="rs"
+                  menuPlacement="auto"
+                  maxMenuHeight={5 * 42}
+
+                  styles={{
+                    control: (base, state) => ({
+                      ...base,
+                      minHeight: 52,
+                      height: 52,
+                      borderRadius: 12,
+                      borderColor: state.isFocused
+                        ? "#1B2A78"
+                        : "#DCE1EE",
+                      boxShadow: state.isFocused
+                        ? "0 0 0 3px rgba(27,42,120,0.08)"
+                        : "none",
+                      "&:hover": {
+                        borderColor: "#AEB8D5",
+                      },
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: "#1B2A78",
+                    }),
+
+                    valueContainer: base => ({
+                      ...base,
+                      paddingLeft: 16,
+                      paddingRight: 8,
+                    }),
+
+                    placeholder: base => ({
+                      ...base,
+                      color: "#9AA1B3",
+                    }),
+
+                    singleValue: base => ({
+                      ...base,
+                      color: "#1B2A78",
+                      fontWeight: 600,
+                    }),
+
+                    indicatorSeparator: () => ({
+                      display: "none",
+                    }),
+
+                    dropdownIndicator: base => ({
+                      ...base,
+                      color: "#1B2A78",
+                    }),
+
+                    clearIndicator: base => ({
+                      ...base,
+                      color: "#8A90A3",
+                    }),
+
+                    menu: base => ({
+                      ...base,
+                      zIndex: 50,
+                      borderRadius: 12,
+                      overflow: "hidden",
+                      border: "1px solid #E1E5EF",
+                      boxShadow:
+                        "0 14px 30px rgba(13,22,66,0.12)",
+                    }),
+
+                    option: (base, state) => ({
+                      ...base,
+                      fontSize: 13,
+                      padding: "11px 14px",
+                      backgroundColor:
+                        state.isSelected
+                          ? "#F1F3FA"
+                          : state.isFocused
+                            ? "#F8F9FD"
+                            : "#FFFFFF",
+                      color:
+                        state.isSelected
+                          ? "#1B2A78"
+                          : "#39415A",
+                      fontWeight:
+                        state.isSelected ? 700 : 500,
+                    }),
+                  }}
+                />
+
               </div>
 
-             {/* ================= GRID 2 KOLON: Peserta + DatePicker ================= */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
-                {/* LEFT: DROPBOX PESERTA */}
-                <div className="mb-4">
-                  <label className="block text-[14px] sm:text-[14px] md:text-[14px] lg:text-[13px] xl:text-[14px] font-medium mb-2 text-gray-500">
-                    {t.pilihPeserta}
+              {/* ================= TANGGAL ================= */}
+              <div>
+
+                <div className="mb-2 flex items-center justify-between">
+
+                  <label
+                    className="
+                      block
+                      text-[12px]
+                      font-bold
+                      text-[#0D1642]
+                    "
+                  >
+                    {t.pilihTanggalJanjiTemu}
                   </label>
 
-                  <Select
-                    instanceId="peserta-select"
-                    options={pesertaOptions}
-                    placeholder={t.pilihPeserta}
-                    isSearchable
-                    isClearable
-                    value={pesertaOptions.find(o => o.value === selectedPeserta?.value) || null}
-                    onChange={(val) => setSelectedPeserta(val)}
-                    classNamePrefix="rs"
-                    menuPlacement="auto"
-                    maxMenuHeight={5 * 42}
-                  />
+
+                  {patientType === "Tunai" && (
+                    <span
+                      className="
+                        text-[10px]
+                        font-semibold
+                        text-[#8A90A3]
+                      "
+                    >
+                      {t.maks7Hari}
+                    </span>
+                  )}
+
                 </div>
 
-                {/* RIGHT: DATE PICKER */}
-                <div>
-                  <p className="text-[14px] sm:text-[14px] md:text-[14px] lg:text-[13px] xl:text-[14px] font-medium text-gray-500 mb-2">
-                    {t.pilihTanggalJanjiTemu}
-                    {patientType === "Tunai" && (
-                      <span className="text-gray-500 font-semibold">
-                        {t.maks7Hari}
-                      </span>
-                    )}
-                  </p>
-                  <DatePicker
-                    selected={selectedDate}
-                    onChange={(date: Date | null) => setSelectedDate(date)}
-                    locale={dateLocale}
-                    dateFormat="EEEE, dd MMMM yyyy"
-                    placeholderText={t.pilihTanggalJanjiTemu}
-                    minDate={new Date()}
-                    maxDate={addDays(new Date(), maxDays)}
-                    withPortal
-                    portalId="datepicker-portal"
-                    customInput={<DateInput />}
-                  />
-                </div>
+
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={(date: Date | null) =>
+                    setSelectedDate(date)
+                  }
+                  locale={dateLocale}
+                  dateFormat="EEEE, dd MMMM yyyy"
+                  placeholderText={
+                    t.pilihTanggalJanjiTemu
+                  }
+                  minDate={new Date()}
+                  maxDate={addDays(
+                    new Date(),
+                    maxDays
+                  )}
+                  withPortal
+                  portalId="datepicker-portal"
+                  customInput={<DateInput />}
+                />
 
               </div>
 
-              {/* ================= JADWAL DOKTER TERSEDIA ================= */}
-              <div className="flex justify-center mb-6">
-                <div className="bg-gray-50 rounded-xl p-6 border border-gray-400 w-full md:w-2/3">
-                  {/* ===== JUDUL / STATUS JADWAL ===== */}
-                    {doctor && doctorSchedules.length === 0 ? (
-                      <p className="text-[14px] sm:text-[16px] md:text-[16px] lg:text-[16px] xl:text-[18px] font-semibold text-gray-400 text-center mb-1 mt-1">
-                        {t.jadwalDokterTidakTersedia}
-                      </p>
-                    ) : (
-                      <p className="text-[14px] sm:text-[14px] md:text-[14px] lg:text-[12px] xl:text-[14px] font-medium text-gray-500 mb-5 text-center">
-                        {t.jadwalDokterTersedia}
-                      </p>
-                    )}
+            </div>
 
-                  {doctor ? (
-                    doctorSchedules.length > 0 ? (
-                     <ul className="space-y-2">
-                      {doctorSchedules.map((schedule, idx) => {
-                        const radioId = `schedule-${idx}`;
+
+            {/* ===================================================
+                JADWAL DOKTER
+            ==================================================== */}
+            <div
+              className="
+                mt-7
+                rounded-2xl
+                border
+                border-[#E1E5EF]
+                bg-[#F7F8FC]
+                p-4
+                sm:p-5
+              "
+            >
+
+              {/* ================= HEADER ================= */}
+              <div
+                className="
+                  mb-4
+                  flex
+                  items-start
+                  justify-between
+                  gap-4
+                "
+              >
+
+                <div>
+
+                  <div className="flex items-center gap-2">
+
+                    <div
+                      className="
+                        flex
+                        h-8
+                        w-8
+                        items-center
+                        justify-center
+                        rounded-lg
+                        bg-[#1B2A78]
+                        text-white
+                      "
+                    >
+                      <FiClock size={16} />
+                    </div>
+
+                    <div>
+
+                      <p
+                        className="
+                          text-[13px]
+                          sm:text-[14px]
+                          font-extrabold
+                          text-[#0D1642]
+                        "
+                      >
+                        Jadwal Dokter
+                      </p>
+
+                      <p
+                        className="
+                          mt-0.5
+                          text-[10px]
+                          sm:text-[11px]
+                          text-[#8A90A3]
+                        "
+                      >
+                        Pilih waktu kunjungan Anda
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                {doctor && doctorSchedules.length > 0 && (
+                  <span
+                    className="
+                      shrink-0
+                      rounded-full
+                      bg-[#E0A918]/15
+                      px-3
+                      py-1.5
+                      text-[9px]
+                      sm:text-[10px]
+                      font-bold
+                      text-[#967000]
+                    "
+                  >
+                    Tersedia
+                  </span>
+                )}
+
+              </div>
+
+
+              {/* ================= NO SCHEDULE ================= */}
+              {doctor &&
+              doctorSchedules.length === 0 ? (
+
+                <div
+                  className="
+                    rounded-xl
+                    border
+                    border-dashed
+                    border-[#D9DEEA]
+                    bg-white
+                    px-4
+                    py-8
+                    text-center
+                  "
+                >
+
+                  <FiCalendar
+                    size={24}
+                    className="
+                      mx-auto
+                      mb-2
+                      text-[#AEB5C7]
+                    "
+                  />
+
+                  <p
+                    className="
+                      text-[13px]
+                      font-semibold
+                      text-[#6F7689]
+                    "
+                  >
+                    {t.jadwalDokterTidakTersedia}
+                  </p>
+
+                  <p
+                    className="
+                      mt-1
+                      text-[10px]
+                      text-[#9AA1B3]
+                    "
+                  >
+                    Silakan pilih tanggal lainnya.
+                  </p>
+
+                </div>
+
+              ) : doctor ? (
+
+                /* ================= SCHEDULE LIST ================= */
+                doctorSchedules.length > 0 ? (
+
+                  <ul className="space-y-2">
+
+                    {doctorSchedules.map(
+                      (schedule, idx) => {
+
+                        const radioId =
+                          `schedule-${idx}`;
+
+                        const selected =
+                          selectedSchedule ===
+                          schedule;
+
 
                         return (
                           <li
                             key={idx}
+                            onClick={() =>
+                              setSelectedSchedule(
+                                schedule
+                              )
+                            }
                             className={`
-                              flex items-center justify-between gap-4
-                              rounded-lg border px-4 py-3 cursor-pointer transition
-                              ${selectedSchedule === schedule
-                                ? "border-blue-500 bg-blue-50"
-                                : "border-gray-300 bg-white hover:border-blue-400"}
+                              flex
+                              min-h-[58px]
+                              items-center
+                              justify-between
+                              gap-3
+                              rounded-xl
+                              border
+                              px-3
+                              sm:px-4
+                              py-3
+                              cursor-pointer
+                              transition-all
+                              duration-200
+
+                              ${
+                                selected
+                                  ? `
+                                    border-[#1B2A78]
+                                    bg-white
+                                    ring-1
+                                    ring-[#1B2A78]/10
+                                    shadow-[0_5px_15px_rgba(27,42,120,0.06)]
+                                  `
+                                  : `
+                                    border-[#E0E4EE]
+                                    bg-white
+                                    hover:border-[#AEB7D2]
+                                    hover:shadow-sm
+                                  `
+                              }
                             `}
-                            onClick={() => setSelectedSchedule(schedule)}
                           >
-                            {/* LEFT : RADIO + NAMA UNIT */}
-                            <label htmlFor={radioId} className="flex items-center gap-3 cursor-pointer flex-1">
+
+                            {/* LEFT */}
+                            <label
+                              htmlFor={radioId}
+                              className="
+                                flex
+                                min-w-0
+                                flex-1
+                                cursor-pointer
+                                items-center
+                                gap-3
+                              "
+                            >
+
                               <input
                                 id={radioId}
                                 type="radio"
                                 name="doctor-schedule"
-                                checked={selectedSchedule === schedule}
-                                onChange={() => setSelectedSchedule(schedule)}
-                                className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                                checked={selected}
+                                onChange={() =>
+                                  setSelectedSchedule(
+                                    schedule
+                                  )
+                                }
+                                className="
+                                  h-4
+                                  w-4
+                                  shrink-0
+                                  accent-[#1B2A78]
+                                "
                               />
 
-                              <span className="text-[12px] sm:text-[14px] md:text-[14px] lg:text-[12px] xl:text-[14px] text-gray-700 font-medium">
+                              <span
+                                className={`
+                                  min-w-0
+                                  text-[11px]
+                                  sm:text-[13px]
+                                  font-semibold
+                                  leading-5
+
+                                  ${
+                                    selected
+                                      ? "text-[#1B2A78]"
+                                      : "text-[#39415A]"
+                                  }
+                                `}
+                              >
                                 {schedule.ServiceUnitName}
                               </span>
+
                             </label>
 
-                            {/* RIGHT : JAM */}
-                            <span className="text-[11px] sm:text-[13px] md:text-[13px] lg:text-[11px] xl:text-[13px] font-semibold text-gray-700 whitespace-nowrap">
-                              {formatTimeRange(schedule.StartTime1, schedule.EndTime1)}
+
+                            {/* RIGHT */}
+                            <span
+                              className={`
+                                flex
+                                shrink-0
+                                items-center
+                                gap-1
+                                rounded-lg
+                                px-2.5
+                                py-1.5
+                                text-[10px]
+                                sm:text-[11px]
+                                font-bold
+
+                                ${
+                                  selected
+                                    ? `
+                                      bg-[#1B2A78]
+                                      text-white
+                                    `
+                                    : `
+                                      bg-[#F0F2F8]
+                                      text-[#1B2A78]
+                                    `
+                                }
+                              `}
+                            >
+
+                              <FiClock size={12} />
+
+                              {formatTimeRange(
+                                schedule.StartTime1,
+                                schedule.EndTime1
+                              )}
+
                             </span>
+
                           </li>
                         );
-                      })}
-                    </ul>
-                    ) : (
-                      null
-                    )
-                  ) : (
-                    <p className="text-sm text-gray-400 text-center">{t.memuatJadwalDokter}</p>
-                  )}
-                </div>
-              </div>
 
-              {/* ================= BUTTON DAFTAR ================= */}
-              <div className="mt-6">
-                <button
-                  disabled={!isFormComplete}
-                  onClick={() => {
-                    if (!isFormComplete) return;
-                    openConfirmModal();
-                  }}
-                  className={`
-                    w-full
-                    py-3
-                    rounded-lg
-                    text-[16px] sm:text-[16px] md:text-[18px] lg:text-[16px] xl:text-[18px] font-semibold
-                    transition
-                    ${isFormComplete
-                      ? "bg-blue-800 text-white hover:bg-blue-500 cursor-pointer"
-                      : "bg-blue-300 text-white cursor-not-allowed"
-                    }
-                  `}
+                      }
+                    )}
+
+                  </ul>
+
+                ) : null
+
+              ) : (
+
+                <div
+                  className="
+                    py-8
+                    text-center
+                    text-[12px]
+                    text-[#9AA1B3]
+                  "
                 >
-                  {t.daftarAppointment}
-                </button>
-              </div>
+                  {t.memuatJadwalDokter}
+                </div>
+
+              )}
 
             </div>
+
+
+            {/* ===================================================
+                SUBMIT
+            ==================================================== */}
+            <div className="mt-6">
+
+              <button
+                disabled={!isFormComplete}
+                onClick={() => {
+
+                  if (!isFormComplete) {
+                    return;
+                  }
+
+                  openConfirmModal();
+
+                }}
+                className={`
+                  flex
+                  h-[54px]
+                  w-full
+                  items-center
+                  justify-center
+                  rounded-xl
+                  text-[13px]
+                  sm:text-[14px]
+                  font-extrabold
+                  transition-all
+                  duration-200
+
+                  ${
+                    isFormComplete
+                      ? `
+                        bg-[#1B2A78]
+                        text-white
+                        shadow-[0_10px_24px_rgba(27,42,120,0.18)]
+                        hover:bg-[#0D1642]
+                        hover:-translate-y-[1px]
+                        cursor-pointer
+                      `
+                      : `
+                        bg-[#DDE2EF]
+                        text-[#949BAD]
+                        cursor-not-allowed
+                      `
+                  }
+                `}
+              >
+                {t.daftarAppointment}
+              </button>
+
+            </div>
+
           </div>
-        </div>
 
-      </div> 
+        </section>
 
-      {/* ================= BACK BUTTON ================= */}
-      <button
-        onClick={() => router.back()}
-        className="mt-10 inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 transition"
-      >
-        ← Kembali
-      </button>
 
+        {/* =======================================================
+            BACK BUTTON
+        ======================================================== */}
+        <button
+          onClick={() => router.back()}
+          className="
+            mt-6
+            inline-flex
+            items-center
+            gap-2
+            rounded-lg
+            px-1
+            py-2
+            text-[12px]
+            sm:text-[13px]
+            font-semibold
+            text-[#626A80]
+            transition-colors
+            hover:text-[#1B2A78]
+          "
+        >
+          <FiArrowLeft size={16} />
+
+          {lang === "ID"
+            ? "Kembali"
+            : "Back"}
+        </button>
+
+      </main>
+
+
+      {/* =========================================================
+          CONFIRMATION MODAL
+      ========================================================== */}
       <ModalKonfirmasiAppointment
         isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
+        onClose={() =>
+          setShowConfirmModal(false)
+        }
         onConfirm={handleSubmitAppointment}
-        isSubmitting={isSubmitting} 
-        doctorName={doctor?.paramedicname ?? ""}
-        serviceUnitName={selectedSchedule?.ServiceUnitName ?? ""}
+        isSubmitting={isSubmitting}
+        doctorName={
+          doctor?.paramedicname ?? ""
+        }
+        serviceUnitName={
+          selectedSchedule?.ServiceUnitName ?? ""
+        }
         billingTotal={billingTotal}
         patientType={patientType}
-        patientTypeLabel={getPatientTypeLabel(patientType)}
+        patientTypeLabel={
+          getPatientTypeLabel(patientType)
+        }
         time={
           selectedSchedule
             ? formatTimeRange(
@@ -1040,20 +1884,33 @@ function JanjiTemuContent() {
         }
         appointmentDate={
           selectedDate
-            ? selectedDate.toLocaleDateString(lang === "ID" ? "id-ID" : "en-US", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
+            ? selectedDate.toLocaleDateString(
+                lang === "ID"
+                  ? "id-ID"
+                  : "en-US",
+                {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              )
             : ""
         }
-        patientName={selectedPeserta?.label ?? ""}
-        registerTime={new Date().toLocaleTimeString(lang === "ID" ? "id-ID" : "en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
+        patientName={
+          selectedPeserta?.label ?? ""
+        }
+        registerTime={new Date().toLocaleTimeString(
+          lang === "ID"
+            ? "id-ID"
+            : "en-US",
+          {
+            hour: "2-digit",
+            minute: "2-digit",
+          }
+        )}
       />
+
     </div>
   );
 }

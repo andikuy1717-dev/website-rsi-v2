@@ -18,177 +18,143 @@ export default function SejarahPage() {
   const section2010 = useFadeInOnScroll();
   const section2022 = useFadeInOnScroll();
 
+  const sections = [
+    {
+      year: "1910",
+      image: "/1910.png",
+      text: t.sejarah1910,
+      reverse: false,
+      ref: section1910,
+    },
+    {
+      year: "1922",
+      image: "/1922.png",
+      text: t.sejarah1922,
+      reverse: true,
+      ref: section1922,
+    },
+    {
+      year: "1949",
+      image: "/1949.png",
+      text: t.sejarah1949,
+      reverse: false,
+      ref: section1949,
+    },
+    {
+      year: "1965",
+      image: "/1965.webp",
+      text: t.sejarah1965,
+      reverse: true,
+      ref: section1965,
+    },
+    {
+      year: "1997",
+      image: "/1997.webp",
+      text: t.sejarah1997,
+      reverse: false,
+      ref: section1997,
+    },
+    {
+      year: "2010",
+      image: "/2010.webp",
+      text: t.sejarah2010,
+      reverse: true,
+      ref: section2010,
+    },
+    {
+      year: "2022",
+      image: "/2022.webp",
+      text: t.sejarah2022,
+      reverse: false,
+      ref: section2022,
+    },
+  ];
+
   return (
-    <div className="min-h-screen mx-auto w-full max-w-8xl px-4 md:px-14 lg:px-16 xl:px-18 text-black">
+    <div className="mx-auto w-full max-w-6xl">
 
-      {/* ================= SECTION 1910 ================= */}
-      <div ref={section1910.ref} className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16 transition-all duration-700 ease-out ${section1910.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-        {/* IMAGE LEFT */}
-        <div className="w-full flex justify-center">
-          <Image
-            src="/1910.png"
-            alt="Immanuel Hospital 1910"
-            width={500}
-            height={350}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
+      {/* ================= TIMELINE ================= */}
+      <div className="relative">
 
-        {/* TEXT RIGHT */}
-        <div className="text-gray-600 text-sm leading-relaxed">
-          <h2 className="text-[60px] font-semibold text-blue-950 mb-3">
-            1910
-          </h2>
-          <p className="text-justify">
-            {t.sejarah1910}
-          </p>
+        {/* GARIS TIMELINE DESKTOP */}
+        <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-slate-200 lg:block" />
+
+        <div className="space-y-16 md:space-y-20">
+
+          {sections.map((section) => (
+            <div
+              key={section.year}
+              ref={section.ref.ref}
+              className={`
+                relative grid grid-cols-1 items-center gap-8
+                transition-all duration-700 ease-out
+                lg:grid-cols-2 lg:gap-16
+                ${
+                  section.ref.isVisible
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-10 opacity-0"
+                }
+              `}
+            >
+
+              {/* ================= IMAGE ================= */}
+              <div
+                className={
+                  section.reverse
+                    ? "lg:order-2"
+                    : "lg:order-1"
+                }
+              >
+                <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-2 shadow-[0_12px_35px_rgba(15,23,42,0.10)]">
+
+                  <div className="overflow-hidden rounded-xl">
+                    <Image
+                      src={section.image}
+                      alt={`Immanuel Hospital ${section.year}`}
+                      width={600}
+                      height={420}
+                      className="h-auto w-full object-cover transition duration-700 group-hover:scale-[1.03]"
+                    />
+                  </div>
+
+                </div>
+              </div>
+
+              {/* ================= CONTENT ================= */}
+              <div
+                className={
+                  section.reverse
+                    ? "lg:order-1"
+                    : "lg:order-2"
+                }
+              >
+
+                {/* YEAR */}
+                <h3 className="text-5xl font-extrabold tracking-tight text-[#182772] sm:text-6xl">
+                  {section.year}
+                </h3>
+
+                {/* ACCENT LINE */}
+                <div className="my-5 h-px w-16 bg-[#d6ad52]" />
+
+                {/* DESCRIPTION */}
+                <p className="text-justify text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
+                  {section.text}
+                </p>
+
+              </div>
+
+            </div>
+          ))}
+
         </div>
       </div>
 
-      {/* ================= SECTION 1922 ================= */}
-      <div ref={section1922.ref} className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16 transition-all duration-700 ease-out ${section1922.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-        {/* TEXT LEFT */}
-        <div className="text-gray-600 text-sm leading-relaxed order-2 md:order-1 md:pl-10">
-          <h2 className="text-[60px] font-semibold text-blue-950 mb-3">
-            1922
-          </h2>
-          <p className="text-justify">
-            {t.sejarah1922}
-          </p>
-        </div>
-
-        {/* IMAGE RIGHT */}
-        <div className="w-full flex justify-center order-1 md:order-2">
-          <Image
-            src="/1922.png"
-            alt="Immanuel Hospital 1922"
-            width={500}
-            height={350}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
+      {/* ================= END TIMELINE ================= */}
+      <div className="mt-20 flex justify-center">
+        <div className="h-2 w-2 rounded-full bg-[#d6ad52]" />
       </div>
 
-      {/* ================= SECTION 1949 ================= */}
-      <div ref={section1949.ref} className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16 transition-all duration-700 ease-out ${section1949.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-        {/* IMAGE LEFT */}
-        <div className="w-full flex justify-center">
-          <Image
-            src="/1949.png"
-            alt="Immanuel Hospital 1949"
-            width={500}
-            height={350}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
-
-        {/* TEXT RIGHT */}
-        <div className="text-gray-600 text-sm leading-relaxed">
-          <h2 className="text-[60px] font-semibold text-blue-950 mb-3">
-            1949
-          </h2>
-          <p className="text-justify">
-            {t.sejarah1949}
-          </p>
-        </div>
-      </div>
-
-      {/* ================= SECTION 1965 ================= */}
-      <div ref={section1965.ref} className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16 transition-all duration-700 ease-out ${section1965.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-        {/* TEXT LEFT */}
-        <div className="text-gray-600 text-sm leading-relaxed order-2 md:order-1 md:pl-10">
-          <h2 className="text-[60px] font-semibold text-blue-950 mb-3">
-            1965
-          </h2>
-          <p className="text-justify">
-            {t.sejarah1965}
-          </p>
-        </div>
-
-        {/* IMAGE RIGHT */}
-        <div className="w-full flex justify-center order-1 md:order-2">
-          <Image
-            src="/1965.webp"
-            alt="Immanuel Hospital 1965"
-            width={500}
-            height={350}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
-      </div>
-
-      {/* ================= SECTION 1997 ================= */}
-      <div ref={section1997.ref} className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16 transition-all duration-700 ease-out ${section1997.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-        {/* IMAGE LEFT */}
-        <div className="w-full flex justify-center">
-          <Image
-            src="/1997.webp"
-            alt="Immanuel Hospital 1997"
-            width={500}
-            height={350}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
-
-        {/* TEXT RIGHT */}
-        <div className="text-gray-600 text-sm leading-relaxed">
-          <h2 className="text-[60px] font-semibold text-blue-950 mb-3">
-            1997
-          </h2>
-          <p className="text-justify">
-           {t.sejarah1997}
-          </p>
-        </div>
-      </div>
-      
-      {/* ================= SECTION 2010 ================= */}
-      <div ref={section2010.ref} className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16 transition-all duration-700 ease-out ${section2010.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-        {/* TEXT LEFT */}
-        <div className="text-gray-600 text-sm leading-relaxed order-2 md:order-1 md:pl-10">
-          <h2 className="text-[60px] font-semibold text-blue-950 mb-3">
-            2010
-          </h2>
-          <p className="text-justify">
-            {t.sejarah2010}
-          </p>
-        </div>
-
-        {/* IMAGE RIGHT */}
-        <div className="w-full flex justify-center order-1 md:order-2">
-          <Image
-            src="/2010.webp"
-            alt="Immanuel Hospital 2010"
-            width={500}
-            height={350}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
-      </div>
-
-      {/* ================= SECTION 2022 ================= */}
-      <div ref={section2022.ref} className={`grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16 transition-all duration-700 ease-out ${section2022.isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-        {/* IMAGE LEFT */}
-        <div className="w-full flex justify-center">
-          <Image
-            src="/2022.webp"
-            alt="Immanuel Hospital 2022"
-            width={500}
-            height={350}
-            className="rounded-lg shadow-lg"
-          />
-        </div>
-
-        {/* TEXT RIGHT */}
-        <div className="text-gray-600 text-sm leading-relaxed">
-          <h2 className="text-[60px] font-semibold text-blue-950 mb-3">
-            2022
-          </h2>
-          <p className="text-justify">
-            {t.sejarah2022}
-          </p>
-        </div>
-      </div>
-      
     </div>
   );
 }

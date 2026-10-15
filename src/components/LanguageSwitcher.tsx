@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLang } from "@/context/LanguageContext";
 
 export default function LanguageSwitcher() {
   const { lang, setLang } = useLang();
   const [open, setOpen] = useState(false);
-
-  // Ref untuk mendeteksi klik di luar elemen ini
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,85 +18,77 @@ export default function LanguageSwitcher() {
       }
     };
 
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
     };
   }, []);
 
-  return (
-    <div
-      ref={dropdownRef} className="relative z-50">
-      <div
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-1 cursor-pointer py-1">
-        <img
-          src={lang === "ID" ? "/flag_id.png" : "/flag_en.png"}
-          alt="flag"
-          className="sm:w-3 sm:h-1 md:w-5 md:h-3 lg:w-6 lg:h-4 align-middle"/>
-        <span className="text-[8px] sm:text-[9px] md:text-[9px] lg:text-[10px] xl:text-[14px]">
-          {lang}
-        </span>
+  const changeLanguage = (nextLang: "ID" | "EN") => {
+    setLang(nextLang);
+    setOpen(false);
+  };
 
-       {/* 🔽 SVG Arrow */}
+  return (
+    <div ref={dropdownRef} className="relative z-50">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-label="Pilih bahasa"
+        aria-expanded={open}
+        className="flex h-7 items-center gap-1 rounded-md border border-[#D3D8EE] px-2 text-[8px] sm:text-[9px] md:text-[9px] lg:text-[10px] xl:text-[14px] font-medium text-[#D3D8EE] transition hover:border-[#D3D8EE]/60 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-[#D3D8EE]/30"
+      >
+        <span>{lang}</span>
+
         <svg
-          className={`w-3.5 h-3.5 text-white transition-transform duration-300 ${
-            open ? "rotate-180" : "rotate-0"
+          className={`h-3 w-3 transition-transform duration-200 ${
+            open ? "rotate-180" : ""
           }`}
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="3"
+          strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <path d="M6 9l6 6 6-6" />
+          <path d="m6 9 6 6 6-6" />
         </svg>
-      </div>
+      </button>
 
       {open && (
-        <div
-          className="absolute top-full right-0 mt-1 bg-[rgb(0,4,51)] rounded-1 p-1 backdrop-blur-4 space-y-1">
-          <div
-            onClick={() => {
-              setLang("ID");
-              setOpen(false);
-            }}
-            className={`flex items-center gap-1 py-1 px-1 cursor-pointer
-                ${lang === "ID"
-                ? "bg-[rgba(0,80,160,0.6)]"
-                : "hover:bg-[rgba(255,255,255,0.1)]"
-              }
-              `}
+        <div className="absolute right-0 top-full mt-2 w-28 overflow-hidden rounded-md border border-white/10 bg-[#17255f] p-1 shadow-xl">
+          <button
+            type="button"
+            onClick={() => changeLanguage("ID")}
+            className={`w-full rounded px-3 py-2 text-left text-xs transition ${
+              lang === "ID"
+                ? "bg-white/15 font-semibold text-white"
+                : "text-[#D3D8EE] hover:bg-white/10"
+            }`}
           >
-            <img
-              src="/flag_id.png"
-              alt="ID"
-              className="sm:w-4 sm:h-2 md:w-5 md:h-3 lg:w-6 lg:h-4"/>
-            <span className="text-white text-[8px] sm:text-[9px] md:text-[9px] lg:text-[10px] xl:text-[14px]">ID</span>
-          </div>
+            Indonesia
+          </button>
 
-          <div
-            onClick={() => {
-              setLang("EN");
-              setOpen(false);
-            }}
-            className={`flex items-center gap-1 py-1 px-1 cursor-pointer
-              ${lang === "EN"
-                ? "bg-[rgba(0,80,160,0.6)]"
-                : "hover:bg-[rgba(255,255,255,0.1)]"
-              }
-            `}
+          <button
+            type="button"
+            onClick={() => changeLanguage("EN")}
+            className={`w-full rounded px-3 py-2 text-left text-xs transition ${
+              lang === "EN"
+                ? "bg-white/15 font-semibold text-white"
+                : "text-[#D3D8EE] hover:bg-white/10"
+            }`}
           >
-            <img
-              src="/flag_en.png"
-              alt="EN"
-              className="sm:w-4 sm:h-2 md:w-5 md:h-3 lg:w-6 lg:h-4"/>
-            <span className="text-white text-[8px] sm:text-[9px] md:text-[9px] lg:text-[10px] xl:text-[14px]">
-              EN
-            </span>
-          </div>
+            English
+          </button>
         </div>
       )}
     </div>

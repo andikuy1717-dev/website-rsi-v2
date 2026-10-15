@@ -25,7 +25,7 @@ function AwardTimelineItem({
       }`}
     >
       {/* DOT */}
-      <div className="absolute left-1/2 z-10 h-5 w-5 -translate-x-1/2 rounded-full border-4 border-white bg-blue-600" />
+      <div className="absolute left-1/2 z-10 h-5 w-5 -translate-x-1/2 rounded-full border-4 border-white bg-[#d6ad52]" />
 
       {/* CARD */}
       <div

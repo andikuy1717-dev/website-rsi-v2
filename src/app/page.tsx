@@ -1,47 +1,37 @@
 import HeroSection from "@/components/beranda/HeroSection";
 import SixMainButtons from "@/components/beranda/SixMainButtons";
-import ListCount from "@/components/beranda/ListCount";
 import LayananUnggulanSectionPage from "@/components/beranda/LayananUnggulanSectionPage";
 import RuanganDanKamar from "@/components/beranda/RuanganDanKamar";
 import CeritaPasienPage from "@/components/beranda/CeritaPasien";
 import SudahBuatJanjiTemuPage from "@/components/beranda/SudahBuatJanjiTemuPage";
 import ArtikelDanPromoPage from "@/components/beranda/ArtikelDanPromo";
 
-
-
 export default function Page() {
   return (
     <>
-    <div className="w-full pt-5 sm:pt-5 md:pt-15 flex flex-col items-start justify-start gap-4 sm:gap-6 sm:px-8 md:px-12 lg:px-16 xl:px-18" style={{
-      background: "linear-gradient(to bottom right, white 20%, #a6cbff 70%, #a6cbff 50%, #bbd8fd 90%)"
-    }}>
-      
-    {/* HERO SECTION KIRI DAN KANAN */}
-      <HeroSection />
+      {/* HERO WRAPPER: FULL LATAR ABU (#F3F5FB) TANPA GRADIEN */}
+      <section className="w-full bg-[#F3F5FB] pt-8 sm:pt-10 md:pt-12 pb-16 sm:pb-20 relative">
+        <div className="mx-auto w-full max-w-[1440px] px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20">
+          
+          {/* HERO SECTION KIRI & KANAN */}
+          <HeroSection />
 
-      {/* 6 MAIN BUTTONS */}
-      <SixMainButtons />
-    </div>
+          {/* KARTU MELAYANG YANG MEMBELAH KE SECTION BERIKUTNYA */}
+          <div className="relative z-20 -mb-28 sm:-mb-32 mt-12 sm:mt-16">
+            <SixMainButtons />
+          </div>
 
-      {/* PARAMEDIC COUNT LIST */}
-      <ListCount/>
+        </div>
+      </section>
 
-      {/* LAYANAN UNGGULAN PAGE */}
-      <LayananUnggulanSectionPage/>
+      {/* SECTION BERIKUTNYA DENGAN LATAR PUTIH */}
+      <LayananUnggulanSectionPage />
 
-      {/* RUANGAN DAN KAMAR */}
-      <RuanganDanKamar/>
-
-      {/* CERITA PASIEN */}
-      <CeritaPasienPage/>
-
-      {/* SUDAH BUAT JANJI TEMU */}
-      <SudahBuatJanjiTemuPage/>
-
-      {/* ARTIKEL DAN PROMO */}
-      <ArtikelDanPromoPage/>
-
+      {/* SECTION LAINNYA */}
+      <RuanganDanKamar />
+      <CeritaPasienPage />
+      <ArtikelDanPromoPage />
+      <SudahBuatJanjiTemuPage />
     </>
-
   );
 }

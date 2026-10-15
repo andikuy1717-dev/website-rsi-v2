@@ -6,7 +6,7 @@ export default function WhatsAppComponents() {
   return (
     <>
       {/* WA kecil di pojok */}
-        <div onClick={() => window.open("https://wa.me/628112187773", "_blank")} className="flex items-center gap-1 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
+        <div onClick={() => window.open("https://wa.me/6281297707779", "_blank")} className="flex items-center gap-1 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
         <img
           src="/WA_Logo.png"
           alt="WhatsApp"

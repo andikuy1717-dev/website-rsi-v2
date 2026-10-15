@@ -1,17 +1,15 @@
 "use client";
 
-import Image from "next/image";
-import { Instagram, Facebook, Mail, Youtube, Linkedin } from "lucide-react";
-import { ID } from "@/lang/id";
-import { EN } from "@/lang/en";
-import { useLang } from "@/context/LanguageContext";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { useLang } from "@/context/LanguageContext";
+import { ID } from "@/lang/id";
+import { EN } from "@/lang/en";
+import Image from "next/image";
 
 export default function Footer() {
   const { lang } = useLang();
   const t = lang === "ID" ? ID : EN;
-
   const router = useRouter();
 
   const showDevelopmentAlert = () => {
@@ -24,7 +22,7 @@ export default function Footer() {
   };
 
   const openLabResult = () => {
-    const token = localStorage.getItem("token");
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
     if (!token) {
       router.push("/login");
@@ -35,107 +33,155 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full bg-[#0A3FA9] text-white">
-      {/* CONTENT - padding sama persis dengan navbar, tanpa max-width */}
-      <div className="w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-18 py-14">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-3 sm:gap-15 md:gap-20 lg:gap-40 xl:gap-50">
-          {/* LEFT */}
-          <div className="flex flex-col items-start space-y-4">
-            <h3 className="text-lg font-semibold">{t.tentangKami}</h3>
-            <p className="text-sm opacity-90">Download Imma Apps</p>
-
-            <div className="flex flex-col gap-3 -ml-3">
-              <a
-                href="https://play.google.com/store/search?q=imma&c=apps&hl=id"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block transition hover:opacity-90"
-              >
-                <Image
-                  src="/google_play.png"
-                  alt="Google Play"
-                  width={180}
-                  height={54}
-                  className="w-auto h-14"
-                />
-              </a>
-              <a
-                href="https://apps.apple.com/id/app/imma/id6741088695?l=id"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block transition hover:opacity-90"
-              >
-                <Image
-                  src="/app_store.png"
-                  alt="App Store"
-                  width={180}
-                  height={54}
-                  className="w-auto h-15"
-                />
-              </a>
+    <footer className="w-full bg-[#111C52] text-white font-['Plus_Jakarta_Sans',sans-serif]">
+      {/* CONTAINER UTAMA */}
+      <div className="mx-auto w-full max-w-[1440px] px-6 sm:px-8 md:px-12 lg:px-16 xl:px-20 pt-16 pb-8">
+        
+        {/* GRID 4 KOLOM */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8 xl:gap-12">
+          
+          {/* KOLOM 1: IDENTITAS, ALAMAT & KONTAK */}
+          <div className="flex flex-col space-y-5">
+            {/* LOGO & BRAND NAME */}
+            <div className="flex items-center gap-3">
+              <Image
+                src="/Logo RSI.png"
+                alt="Logo RS Immanuel"
+                width={40}
+                height={40}
+                className="w-10 h-10 object-contain shrink-0"
+              />
+              <span className="text-white font-bold text-[17px] sm:text-[18px] tracking-tight">
+                RS Immanuel Bandung
+              </span>
             </div>
+
+            {/* ALAMAT */}
+            <p className="text-[#C5CEEA] text-[13.5px] leading-relaxed">
+              Jl. Raya Kopo No.161, Situsaeur, Kec. Bojongloa Kidul, Kota Bandung, Jawa Barat 40234
+            </p>
+
+            {/* TELEPON & EMAIL SEJAJAR */}
+            <p className="text-[#C5CEEA] text-[13.5px]">
+              <a
+                href="tel:0225201656"
+                className="hover:text-white transition-colors duration-150"
+              >
+                (022) 520 1656
+              </a>
+              <span className="mx-2 text-white/40">·</span>
+              <a
+                href="mailto:info@rsimmanuel.com"
+                className="hover:text-white transition-colors duration-150"
+              >
+                info@rsimmanuel.com
+              </a>
+            </p>
           </div>
 
-          {/* MIDDLE */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t.forPatients}</h3>
+          {/* KOLOM 2: TENTANG KAMI */}
+          <div className="flex flex-col space-y-3.5">
+            <h3 className="text-white font-bold text-[15px] sm:text-[16px] mb-1">
+              Tentang Kami
+            </h3>
+
+            <button
+              type="button"
+              onClick={() => router.push("/tentang-kami")}
+              className="text-left text-[13.5px] text-[#C5CEEA] transition-colors duration-150 hover:text-white"
+            >
+              Profil Rumah Sakit
+            </button>
+
+            <button
+              type="button"
+              onClick={() => router.push("/edukasi-kesehatan")}
+              className="text-left text-[13.5px] text-[#C5CEEA] transition-colors duration-150 hover:text-white"
+            >
+              Edukasi Kesehatan
+            </button>
+
+            <button
+              type="button"
+              onClick={() => router.push("/promo")}
+              className="text-left text-[13.5px] text-[#C5CEEA] transition-colors duration-150 hover:text-white"
+            >
+              Promo
+            </button>
+
+            <a
+              href="https://play.google.com/store/search?q=imma&c=apps&hl=id"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-left text-[#C5CEEA] text-[13.5px] hover:text-white transition-colors duration-150"
+            >
+              Download ImMA Apps
+            </a>
+          </div>
+
+          {/* KOLOM 3: UNTUK PASIEN */}
+          <div className="flex flex-col space-y-3.5">
+            <h3 className="text-white font-bold text-[15px] sm:text-[16px] mb-1">
+              Untuk Pasien
+            </h3>
 
             <button
               type="button"
               onClick={() => router.push("/cari-dokter")}
-              className="block text-left text-sm opacity-90 transition hover:opacity-100 hover:underline"
+              className="text-left text-[#C5CEEA] text-[13.5px] hover:text-white transition-colors duration-150"
             >
-              {t.cariDokter}
+              Cari Dokter
             </button>
 
             <button
               type="button"
               onClick={showDevelopmentAlert}
-              className="block text-left text-sm opacity-90 transition hover:opacity-100 hover:underline"
+              className="text-left text-[#C5CEEA] text-[13.5px] hover:text-white transition-colors duration-150"
             >
-              {t.layananKesehatan}
+              Layanan Kesehatan
             </button>
 
             <a
               href="https://diklat.rsimmanuel.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="block text-sm opacity-90 transition hover:opacity-100 hover:underline"
+              className="text-left text-[#C5CEEA] text-[13.5px] hover:text-white transition-colors duration-150"
             >
-              {t.pusatInformasi}
+              Pusat Informasi
             </a>
 
             <button
               type="button"
               onClick={openLabResult}
-              className="block text-left text-sm opacity-90 transition hover:opacity-100 hover:underline"
+              className="text-left text-[#C5CEEA] text-[13.5px] hover:text-white transition-colors duration-150"
             >
-              {t.hasilLabBeranda}
+              Hasil Lab
             </button>
 
             <button
               type="button"
               onClick={showDevelopmentAlert}
-              className="block text-left text-sm opacity-90 transition hover:opacity-100 hover:underline"
+              className="text-left text-[#C5CEEA] text-[13.5px] hover:text-white transition-colors duration-150"
             >
-              {t.radiologi}
+              Radiologi
             </button>
           </div>
 
-          {/* RIGHT */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t.ConnectWithUs}</h3>
+          {/* KOLOM 4: TERHUBUNG DENGAN KAMI */}
+          <div className="flex flex-col space-y-3.5">
+            <h3 className="text-white font-bold text-[15px] sm:text-[16px] mb-1">
+              Terhubung dengan Kami
+            </h3>
 
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3.5 text-[13.5px] text-[#C5CEEA]">
               <li>
                 <a
                   href="https://www.instagram.com/immanuelhospitalbdg/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 transition hover:opacity-80"
+                  className="hover:text-white transition-colors duration-150 inline-block"
                 >
-                  <Instagram size={18} />
-                  <span>immanuelhospitalbdg</span>
+                  Instagram · immanuelhospitalbdg
                 </a>
               </li>
               <li>
@@ -143,75 +189,54 @@ export default function Footer() {
                   href="https://www.tiktok.com/@rsimmanuelbdg"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 transition hover:opacity-80"
+                  className="hover:text-white transition-colors duration-150 inline-block"
                 >
-                  <Image
-                    src="/tiktok.png"
-                    alt="TikTok"
-                    width={1}
-                    height={1}
-                    className="w-5"
-                  />
-                  <span>rsimmanuelbdg</span>
+                  TikTok · rsimmanuelbdg
                 </a>
               </li>
-
-              <li>
-                <a
-                  href="https://id.linkedin.com/company/rs-immanuel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 transition hover:opacity-80"
-                >
-                  <Linkedin size={18} />
-                  <span>RS Immanuel</span>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="https://www.facebook.com/rsimmanuelbdg161/?locale=id_ID"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 transition hover:opacity-80"
-                >
-                  <Facebook size={18} />
-                  <span>Rumah Sakit Immanuel</span>
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="mailto:info@rsimmanuel.com"
-                  className="flex items-center gap-3 transition hover:opacity-80"
-                >
-                  <Mail size={18} />
-                  <span>info@rsimmanuel.com</span>
-                </a>
-              </li>
-
               <li>
                 <a
                   href="https://www.youtube.com/@rsimmanuelbdg"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 transition hover:opacity-80"
+                  className="hover:text-white transition-colors duration-150 inline-block"
                 >
-                  <Youtube size={18} />
-                  <span>rsimmanuelbdg</span>
+                  YouTube · rsimmanuelbdg
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.facebook.com/rsimmanuelbdg161/?locale=id_ID"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors duration-150 inline-block"
+                >
+                  Facebook · Rumah Sakit Immanuel
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://id.linkedin.com/company/rs-immanuel"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors duration-150 inline-block"
+                >
+                  LinkedIn · RS Immanuel
                 </a>
               </li>
             </ul>
           </div>
-        </div>
-      </div>
 
-      <div className="bg-[#1E3F9A]">
-        <div className="w-full px-4 py-4 sm:px-8 md:px-10 lg:px-12 xl:px-16">
-          <div className="text-left text-md opacity-90">
-            © Copyright 2025, Rs. Immanuel
-          </div>
         </div>
+
+        {/* GARIS PEMBATAS HORIZONTAL */}
+        <div className="w-full border-t border-white/10 mt-14 mb-6" />
+
+        {/* COPYRIGHT BOTTOM BAR */}
+        <div className="text-left text-[#9AA8CE] text-[13px]">
+          © 2026 RS Immanuel Bandung. Hak cipta dilindungi.
+        </div>
+
       </div>
     </footer>
   );

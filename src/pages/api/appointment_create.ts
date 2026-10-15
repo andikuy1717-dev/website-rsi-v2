@@ -39,7 +39,7 @@ export default async function handler(
     });
 
     const response = await fetch(
-      "https://avi.rsimmanuel.net/avicenna/WebService/V1_1/AppointmentWS.asmx/AppointmentCreate",
+      "http://10.200.200.185/avc/WebService/V1_1/AppointmentWS.asmx/AppointmentCreate",
       {
         method: "POST",
         headers: {

@@ -75,7 +75,7 @@ export default function AkunLoginUserComponents() {
       {/* WA kecil di pojok */}
         <div onClick={handleMainClick} className="flex items-center gap-1 cursor-pointer transform transition duration-300 ease-in-out hover:scale-110 hover:rotate-0">
         <img
-          src={firstName ? "/user.png" : "/login_user.png"}
+          src={firstName ? "/login_user.png" : "/login_user.png"}
           alt="LoginUser"
           className="max-sm:w-4 max-sm:h-3 sm:w-5 sm:h-4 md:w-3 md:h-3 lg:w-4 lg:h-4 align-middle"/>
         <span
